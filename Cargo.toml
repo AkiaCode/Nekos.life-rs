@@ -5,7 +5,7 @@ authors = ["AkiaCode <catry.me@gmail.com>"]
 edition = "2018"
 description = "neko.life wrapper library"
 license = "MIT"
-repository = "https://github.com/AkiaCode/Neko.life-rs"
+repository = "https://github.com/AkiaCode/Nekos.life-rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
