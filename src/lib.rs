@@ -19,7 +19,7 @@ pub fn sfw(text: &str) -> std::string::String {
     if json("sfw")[text].is_null() {
         return "NOT FOUND".to_string();
     } else {
-        let resp = ureq::get(&(BASEURL.to_owned() + &json("nsfw")[text].to_string().replace("\\", "").replace("\"", "")))
+        let resp = ureq::get(&(BASEURL.to_owned() + &json("sfw")[text].to_string().replace("\\", "").replace("\"", "")))
             .call();
         let url: Value = resp.into_json().unwrap();
         return url["url"].to_string();
