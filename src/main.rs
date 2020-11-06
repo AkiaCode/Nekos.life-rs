@@ -1,4 +1,4 @@
-use nekolife_rust::{sfw, nsfw};
+use nekolife_rs::{sfw, nsfw};
 
 fn main() {
     println!("{}", nsfw("spank"));
