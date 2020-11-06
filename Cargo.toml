@@ -1,5 +1,5 @@
 [package]
-name = "nekolife-rs"
+name = "nekoslife-rs"
 version = "0.1.1"
 authors = ["AkiaCode <catry.me@gmail.com>"]
 edition = "2018"

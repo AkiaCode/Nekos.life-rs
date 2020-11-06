@@ -1,7 +1,7 @@
-# Neko.life-rs
+# Nekos.life-rs
 
 ### Use
 
 ```markdown
-  nekolife-rs = "0.1.1"
+  nekoslife-rs = "0.1.1"
 ```
