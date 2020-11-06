@@ -3,5 +3,5 @@
 ### Use
 
 ```markdown
-  nekoslife-rs = "0.1.1"
+  nekoslife-rs = "0.1.2"
 ```
