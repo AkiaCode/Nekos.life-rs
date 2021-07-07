@@ -8,7 +8,19 @@ license = "MIT"
 repository = "https://github.com/AkiaCode/Nekos.life-rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = ["default-tls", "sfw", "nsfw"]
+default-tls = ["reqwest/default-tls"]
+native-tls = ["reqwest/native-tls"]
+rustls-tls = ["reqwest/rustls-tls"]
+
+sfw = []
+nsfw = []
+
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-ureq = { version = "1.5.1", features = ["json"] }
+serde = { version="1.0", features=["derive"] }
+reqwest = { version="0.11", default-features=false, features=["json"] }
+thiserror = "1.0"
+
+[dev-dependencies]
+tokio = { version="1", features=["full"] }
