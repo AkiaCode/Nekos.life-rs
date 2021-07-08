@@ -1,9 +1,11 @@
+/// Any error that can occur while accessing the api.
 #[derive(thiserror::Error, Debug)]
 pub enum NekosLifeError {
     #[error("reqwest error")]
     ReqwestError(#[from] reqwest::Error),
 }
 
+/// The base api url.
 const BASEURL: &str = "https://nekos.life/api/v2";
 
 #[cfg(feature = "nsfw")]
@@ -18,13 +20,21 @@ pub use sfw::SfwCategory;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Category {
+    /// A nsfw category.
     #[cfg(feature = "nsfw")]
-    Nsfw(nsfw::NsfwCategory),
+    Nsfw(NsfwCategory),
+    /// A sfw category.
     #[cfg(feature = "sfw")]
-    Sfw(sfw::SfwCategory),
+    Sfw(SfwCategory),
 }
 
 impl Category {
+    /// Gets the path to append after [`BASEURL`] to make a request to get an image / gif url.
+    /// # Examples
+    /// ```rust
+    /// # use nekoslife_rs::{Category, SfwCategory};
+    /// assert_eq!(Category::from(SfwCategory::Waifu).to_url_path(), "/img/waifu");
+    /// ```
     pub fn to_url_path(self) -> &'static str {
         match self {
             #[cfg(feature = "nsfw")]
@@ -53,6 +63,15 @@ impl From<SfwCategory> for Category {
 mod implementation {
     use super::*;
 
+    /// Gets the url of an image / gif from the api, from the given category,
+    /// and using the given client.
+    /// # Examples
+    /// ```rust,no_run
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///     let client = reqwest::blocking::Client::new();
+    ///     let url: String = nekoslife_rs::get_with_client(&client, nekoslife_rs::SfwCategory::Waifu)?;
+    /// #   Ok(())
+    /// # }
     pub fn get_with_client(
         client: &reqwest::blocking::Client,
         category: impl Into<Category>,
@@ -72,6 +91,14 @@ mod implementation {
         Ok(resp.url)
     }
 
+    /// Gets the url of an image / gif from the api, from the given category,
+    /// and using the default client.
+    /// # Examples
+    /// ```rust,no_run
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///     let url: String = nekoslife_rs::get(nekoslife_rs::SfwCategory::Waifu)?;
+    /// #   Ok(())
+    /// # }
     pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
         let client = reqwest::blocking::Client::new();
 
@@ -83,6 +110,16 @@ mod implementation {
 mod implementation {
     use super::*;
 
+    /// Gets the url of an image / gif from the api, from the given category,
+    /// and using the given client.
+    /// # Examples
+    /// ```rust,no_run
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///     let client = reqwest::Client::new();
+    ///     let url: String = nekoslife_rs::get_with_client(&client, nekoslife_rs::SfwCategory::Waifu).await?;
+    /// #   Ok(())
+    /// # }
     pub async fn get_with_client(
         client: &reqwest::Client,
         category: impl Into<Category>,
@@ -104,6 +141,15 @@ mod implementation {
         Ok(resp.url)
     }
 
+    /// Gets the url of an image / gif from the api, from the given
+    /// category, and using the default client.
+    /// # Examples
+    /// ```rust,no_run
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///     let url: String = nekoslife_rs::get(nekoslife_rs::SfwCategory::Waifu).await?;
+    /// #   Ok(())
+    /// # }
     pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
         let client = reqwest::Client::new();
 
