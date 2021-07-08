@@ -13,12 +13,13 @@ nekoslife-rs = "0.1.2"
 ```toml
 [dependencies.nekoslife-rs]
 version = "0.1.2"
-default-features = false
 
 # disable nsfw
+default-features = false
 features = ["default-tls", "sfw"]
 
 # or disable sfw
+default-features = false
 features = ["default-tls", "nsfw"]
 ```
 
@@ -35,3 +36,5 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 ```
+
+With the `blocking` feature, just remove the `.await`.
