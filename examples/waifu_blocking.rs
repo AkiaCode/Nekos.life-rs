@@ -1,5 +1,5 @@
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let url: String = nekoslife_rs::get(nekoslife_rs::SfwCategory::Waifu)?;
+    let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
 
     println!("{}", url);
 
