@@ -1,4 +1,5 @@
 /// A nsfw category of images.
+// On new variants, update the all_nsfw_endpoints_work and no_new_images tests
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum NsfwCategory {
     RandomHentaiGif,
@@ -40,51 +41,57 @@ pub enum NsfwCategory {
     BlowJob,
     Spank,
     Gasm,
+    #[deprecated(
+        note = "always returns https://cdn.nekos.life/smallboobs/404.png; this is only here for completeness"
+    )]
+    SmallBoobs,
 }
 
 impl NsfwCategory {
-    pub fn to_url_path(self) -> &'static str {
+    pub const fn to_url_path(self) -> &'static str {
         use NsfwCategory::*;
         match self {
-            RandomHentaiGif => "/img/Random_hentai_gif",
-            Pussy => "/img/pussy",
-            NekoGif => "/img/nsfw_neko_gif",
-            Neko => "/img/lewd",
-            Lesbian => "/img/les",
-            Kuni => "/img/kuni",
-            Cumsluts => "/img/cum",
-            Classic => "/img/classic",
-            Boobs => "/img/boobs",
-            Bj => "/img/bj",
-            Anal => "/img/anal",
-            Avatar => "/img/nsfw_avatar",
-            Yuri => "/img/yuri",
-            Trap => "/img/trap",
-            Tits => "/img/tits",
-            GirlSoloGif => "/img/solog",
-            GirlSolo => "/img/solo",
-            PussyWankGif => "/img/pwankg",
-            PussyArt => "/img/pussy_jpg",
-            Kemonomimi => "/img/lewdkemo",
-            Kitsune => "/img/lewdk",
-            Keta => "/img/keta",
-            Holo => "/img/hololewd",
-            HoloEro => "/img/holoero",
-            Hentai => "/img/hentai",
-            Futanari => "/img/futanari",
-            Femdom => "/img/femdom",
-            FeetGif => "/img/feetg",
-            EroFeet => "/img/erofeet",
-            Feet => "/img/feet",
-            Ero => "/img/ero",
-            EroKitsune => "/img/erok",
-            EroKemonomimi => "/img/erokemo",
-            EroNeko => "/img/eron",
-            EroYuri => "/img/eroyuri",
-            CumArts => "/img/cum_jpg",
-            BlowJob => "/img/blowjob",
-            Spank => "/img/spank",
-            Gasm => "/img/gasm",
+            RandomHentaiGif => "Random_hentai_gif",
+            Pussy => "pussy",
+            NekoGif => "nsfw_neko_gif",
+            Neko => "lewd",
+            Lesbian => "les",
+            Kuni => "kuni",
+            Cumsluts => "cum",
+            Classic => "classic",
+            Boobs => "boobs",
+            Bj => "bj",
+            Anal => "anal",
+            Avatar => "nsfw_avatar",
+            Yuri => "yuri",
+            Trap => "trap",
+            Tits => "tits",
+            GirlSoloGif => "solog",
+            GirlSolo => "solo",
+            PussyWankGif => "pwankg",
+            PussyArt => "pussy_jpg",
+            Kemonomimi => "lewdkemo",
+            Kitsune => "lewdk",
+            Keta => "keta",
+            Holo => "hololewd",
+            HoloEro => "holoero",
+            Hentai => "hentai",
+            Futanari => "futanari",
+            Femdom => "femdom",
+            FeetGif => "feetg",
+            EroFeet => "erofeet",
+            Feet => "feet",
+            Ero => "ero",
+            EroKitsune => "erok",
+            EroKemonomimi => "erokemo",
+            EroNeko => "eron",
+            EroYuri => "eroyuri",
+            CumArts => "cum_jpg",
+            BlowJob => "blowjob",
+            Spank => "spank",
+            Gasm => "gasm",
+            #[allow(deprecated)]
+            SmallBoobs => "smallboobs",
         }
     }
 }
