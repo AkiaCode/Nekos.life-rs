@@ -1,36 +1,77 @@
-use serde_json::Value;
-use std::io::BufReader;
-use std::fs::File;
+#[derive(thiserror::Error, Debug)]
+pub enum NekosLifeError {
+    #[error("reqwest error")]
+    ReqwestError(#[from] reqwest::Error),
+}
 
 const BASEURL: &str = "https://nekos.life/api/v2";
 
-pub fn nsfw(text: &str) -> std::string::String {
-    if json("nsfw")[text].is_null() {
-        return "NOT FOUND".to_string();
-    } else {
-        let resp = ureq::get(&(BASEURL.to_owned() + &json("nsfw")[text].to_string().replace("\\", "").replace("\"", "")))
-            .call();
-        let url: Value = resp.into_json().unwrap();
-        return url["url"].to_string();
-    } 
+#[cfg(feature = "nsfw")]
+mod nsfw;
+#[cfg(feature = "sfw")]
+mod sfw;
+
+#[cfg(feature = "nsfw")]
+pub use nsfw::NsfwCategory;
+#[cfg(feature = "sfw")]
+pub use sfw::SfwCategory;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Category {
+    #[cfg(feature = "nsfw")]
+    Nsfw(nsfw::NsfwCategory),
+    #[cfg(feature = "sfw")]
+    Sfw(sfw::SfwCategory),
 }
 
-pub fn sfw(text: &str) -> std::string::String {
-    if json("sfw")[text].is_null() {
-        return "NOT FOUND".to_string();
-    } else {
-        let resp = ureq::get(&(BASEURL.to_owned() + &json("sfw")[text].to_string().replace("\\", "").replace("\"", "")))
-            .call();
-        let url: Value = resp.into_json().unwrap();
-        return url["url"].to_string();
-    } 
+impl Category {
+    fn to_url_path(self) -> &'static str {
+        match self {
+            #[cfg(feature = "nsfw")]
+            Self::Nsfw(c) => c.to_url_path(),
+            #[cfg(feature = "sfw")]
+            Self::Sfw(c) => c.to_url_path(),
+        }
+    }
 }
 
-fn json(url: &str) -> serde_json::Value {
-    let file = File::open("./src/endpoints.json").unwrap();
-    let reader = BufReader::new(file);
+#[cfg(feature = "nsfw")]
+impl From<NsfwCategory> for Category {
+    fn from(c: NsfwCategory) -> Self {
+        Self::Nsfw(c)
+    }
+}
 
-    let read: Value = serde_json::from_reader(reader).unwrap();
-    let value = serde_json::from_str(&read[url].to_string()).unwrap();
-    return value;
+#[cfg(feature = "sfw")]
+impl From<SfwCategory> for Category {
+    fn from(c: SfwCategory) -> Self {
+        Self::Sfw(c)
+    }
+}
+
+pub async fn get_with_client(
+    client: &reqwest::Client,
+    category: impl Into<Category>,
+) -> Result<String, NekosLifeError> {
+    let category = category.into();
+
+    #[derive(serde::Deserialize)]
+    struct Response {
+        url: String,
+    }
+
+    let resp = client
+        .get(format!("{}{}", BASEURL, category.to_url_path()))
+        .send()
+        .await?
+        .json::<Response>()
+        .await?;
+
+    Ok(resp.url)
+}
+
+pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    let client = reqwest::Client::new();
+
+    get_with_client(&client, category).await
 }
