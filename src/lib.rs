@@ -25,7 +25,7 @@ pub enum Category {
 }
 
 impl Category {
-    fn to_url_path(self) -> &'static str {
+    pub fn to_url_path(self) -> &'static str {
         match self {
             #[cfg(feature = "nsfw")]
             Self::Nsfw(c) => c.to_url_path(),
@@ -49,29 +49,66 @@ impl From<SfwCategory> for Category {
     }
 }
 
-pub async fn get_with_client(
-    client: &reqwest::Client,
-    category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
-    let category = category.into();
+#[cfg(feature = "blocking")]
+mod implementation {
+    use super::*;
 
-    #[derive(serde::Deserialize)]
-    struct Response {
-        url: String,
+    pub fn get_with_client(
+        client: &reqwest::blocking::Client,
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
+        let category = category.into();
+
+        #[derive(serde::Deserialize)]
+        struct Response {
+            url: String,
+        }
+
+        let resp = client
+            .get(format!("{}{}", BASEURL, category.to_url_path()))
+            .send()?
+            .json::<Response>()?;
+
+        Ok(resp.url)
     }
 
-    let resp = client
-        .get(format!("{}{}", BASEURL, category.to_url_path()))
-        .send()
-        .await?
-        .json::<Response>()
-        .await?;
+    pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+        let client = reqwest::blocking::Client::new();
 
-    Ok(resp.url)
+        get_with_client(&client, category)
+    }
 }
 
-pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
-    let client = reqwest::Client::new();
+#[cfg(not(feature = "blocking"))]
+mod implementation {
+    use super::*;
 
-    get_with_client(&client, category).await
+    pub async fn get_with_client(
+        client: &reqwest::Client,
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
+        let category = category.into();
+
+        #[derive(serde::Deserialize)]
+        struct Response {
+            url: String,
+        }
+
+        let resp = client
+            .get(format!("{}{}", BASEURL, category.to_url_path()))
+            .send()
+            .await?
+            .json::<Response>()
+            .await?;
+
+        Ok(resp.url)
+    }
+
+    pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+        let client = reqwest::Client::new();
+
+        get_with_client(&client, category).await
+    }
 }
+
+pub use implementation::{get, get_with_client};

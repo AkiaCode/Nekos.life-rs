@@ -17,6 +17,8 @@ rustls-tls = ["reqwest/rustls-tls"]
 sfw = []
 nsfw = []
 
+blocking = ["reqwest/blocking"]
+
 [dependencies]
 serde = { version="1.0", features=["derive"] }
 reqwest = { version="0.11", default-features=false, features=["json"] }
@@ -24,3 +26,8 @@ thiserror = "1.0"
 
 [dev-dependencies]
 tokio = { version="1", features=["full"] }
+
+[[example]]
+name = "waifu_blocking"
+path = "examples/waifu_blocking.rs"
+required-features = ["blocking"]
