@@ -376,7 +376,7 @@ mod test {
         let mut unknown_endpoints = vec![];
         for item in list.iter() {
             if !KNOWN_ENDPOINTS.contains(item) {
-                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item.to_string()));
+                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item));
             }
         }
 
