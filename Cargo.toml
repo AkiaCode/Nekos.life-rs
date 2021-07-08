@@ -1,6 +1,6 @@
 [package]
 name = "nekoslife"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["AkiaCode <catry.me@gmail.com>"]
 edition = "2018"
 description = "nekos.life wrapper library"

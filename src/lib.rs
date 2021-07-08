@@ -32,7 +32,7 @@ impl Category {
     /// Gets the path to append after [`BASEURL`]+/img/ to make a request to get an image / gif url.
     /// # Examples
     /// ```rust
-    /// # use nekoslife_rs::{Category, SfwCategory};
+    /// # use nekoslife::{Category, SfwCategory};
     /// assert_eq!(Category::from(SfwCategory::Waifu).to_url_path(), "waifu");
     /// ```
     pub const fn to_url_path(self) -> &'static str {
@@ -69,7 +69,7 @@ mod implementation {
     /// ```rust,no_run
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
     ///     let client = reqwest::blocking::Client::new();
-    ///     let url: String = nekoslife_rs::get_with_client(&client, nekoslife_rs::SfwCategory::Waifu)?;
+    ///     let url: String = nekoslife::get_with_client(&client, nekoslife::SfwCategory::Waifu)?;
     /// #   Ok(())
     /// # }
     pub fn get_with_client(
@@ -96,7 +96,7 @@ mod implementation {
     /// # Examples
     /// ```rust,no_run
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
-    ///     let url: String = nekoslife_rs::get(nekoslife_rs::SfwCategory::Waifu)?;
+    ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
     /// #   Ok(())
     /// # }
     pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
@@ -117,7 +117,7 @@ mod implementation {
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
     ///     let client = reqwest::Client::new();
-    ///     let url: String = nekoslife_rs::get_with_client(&client, nekoslife_rs::SfwCategory::Waifu).await?;
+    ///     let url: String = nekoslife::get_with_client(&client, nekoslife::SfwCategory::Waifu).await?;
     /// #   Ok(())
     /// # }
     pub async fn get_with_client(
@@ -147,7 +147,7 @@ mod implementation {
     /// ```rust,no_run
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    ///     let url: String = nekoslife_rs::get(nekoslife_rs::SfwCategory::Waifu).await?;
+    ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
     /// #   Ok(())
     /// # }
     pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
