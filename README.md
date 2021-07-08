@@ -5,14 +5,14 @@
 Add to dependencies:
 ```toml
 [dependencies]
-nekoslife = "0.2.0"
+nekoslife = "0.2.1"
 ```
 
 ### Features
 
 ```toml
 [dependencies.nekoslife]
-version = "0.2.0"
+version = "0.2.1"
 
 # disable nsfw
 default-features = false
