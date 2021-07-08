@@ -5,14 +5,14 @@
 Add to dependencies:
 ```toml
 [dependencies]
-nekoslife-rs = "0.1.2"
+nekoslife = "0.2.0"
 ```
 
 ### Features
 
 ```toml
-[dependencies.nekoslife-rs]
-version = "0.1.2"
+[dependencies.nekoslife]
+version = "0.2.0"
 
 # disable nsfw
 default-features = false
@@ -29,7 +29,7 @@ Example: get a waifu:
 ```rs
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let url: String = nekoslife_rs::get(nekoslife_rs::SfwCategory::Waifu).await?;
+    let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
 
     println!("{}", url);
 
