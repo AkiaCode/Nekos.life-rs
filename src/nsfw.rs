@@ -1,42 +1,68 @@
+#![cfg_attr(test, allow(deprecated))]
+
+use strum;
+
 /// A nsfw category of images.
 // On new variants, update the all_nsfw_endpoints_work and no_new_images tests
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, strum::Display,
+)]
+#[cfg_attr(test, derive(strum::EnumIter))]
+#[strum(serialize_all = "lowercase")]
 pub enum NsfwCategory {
+    #[strum(serialize = "Random_hentai_gif")]
     RandomHentaiGif,
     Pussy,
+    #[strum(serialize = "nsfw_neko_gif")]
     NekoGif,
+    #[strum(serialize = "lewd")]
     Neko,
+    #[strum(serialize = "les")]
     Lesbian,
     Kuni,
+    #[strum(serialize = "cum")]
     Cumsluts,
     Classic,
     Boobs,
     Bj,
     Anal,
+    #[strum(serialize = "nsfw_avatar")]
     Avatar,
     Yuri,
     Trap,
     Tits,
+    #[strum(serialize = "solog")]
     GirlSoloGif,
+    #[strum(serialize = "solo")]
     GirlSolo,
+    #[strum(serialize = "pwankg")]
     PussyWankGif,
+    #[strum(serialize = "pussy_jpg")]
     PussyArt,
+    #[strum(serialize = "lewdkemo")]
     Kemonomimi,
+    #[strum(serialize = "lewdk")]
     Kitsune,
     Keta,
+    #[strum(serialize = "hololewd")]
     Holo,
     HoloEro,
     Hentai,
     Futanari,
     Femdom,
+    #[strum(serialize = "feetg")]
     FeetGif,
     EroFeet,
     Feet,
     Ero,
+    #[strum(serialize = "erok")]
     EroKitsune,
+    #[strum(serialize = "erokemo")]
     EroKemonomimi,
+    #[strum(serialize = "eron")]
     EroNeko,
     EroYuri,
+    #[strum(serialize = "cum_jpg")]
     CumArts,
     BlowJob,
     Spank,
@@ -94,4 +120,13 @@ impl NsfwCategory {
             SmallBoobs => "smallboobs",
         }
     }
+}
+
+#[test]
+fn can_be_displayed_as_expected() {
+    use strum::IntoEnumIterator;
+
+    NsfwCategory::iter().for_each(|variant| {
+        assert_eq!(variant.to_string(), variant.to_url_path())
+    })
 }
