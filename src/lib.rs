@@ -26,7 +26,9 @@ pub use nsfw::NsfwCategory;
 #[cfg(feature = "sfw")]
 pub use sfw::SfwCategory;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash,
+)]
 pub enum Category {
     /// A nsfw category.
     #[cfg(feature = "nsfw")]
@@ -92,7 +94,11 @@ mod implementation {
         }
 
         let resp = client
-            .get(BASEURL.join("img/")?.join(category.to_url_path())?)
+            .get(
+                BASEURL
+                    .join("img/")?
+                    .join(category.to_url_path())?,
+            )
             .send()?
             .json::<Response>()?;
 
@@ -142,7 +148,11 @@ mod implementation {
         }
 
         let resp = client
-            .get(BASEURL.join("img/")?.join(category.to_url_path())?)
+            .get(
+                BASEURL
+                    .join("img/")?
+                    .join(category.to_url_path())?,
+            )
             .send()
             .await?
             .json::<Response>()
@@ -177,7 +187,10 @@ mod test {
 
     #[test]
     fn dose_url_parsing_work() {
-        assert_eq!(BASEURL.to_string(), "https://nekos.life/api/v2/");
+        assert_eq!(
+            BASEURL.to_string(),
+            "https://nekos.life/api/v2/"
+        );
         assert_eq!(
             BASEURL
                 .join("endpoints")
@@ -206,9 +219,14 @@ mod test {
             .map(Category::from)
             .chain(NsfwCategory::iter().map(Category::from))
         {
-            get_with_client(&client, variant).await.unwrap_or_else(|_| {
-                panic!("{} does not work", variant.to_url_path())
-            });
+            get_with_client(&client, variant)
+                .await
+                .unwrap_or_else(|_| {
+                    panic!(
+                        "{} does not work",
+                        variant.to_url_path()
+                    )
+                });
             println!("{}: works", variant.to_url_path());
         }
     }
@@ -216,7 +234,8 @@ mod test {
     #[tokio::test]
     async fn no_new_endpoints() {
         use {
-            regex::Regex, std::collections::HashSet, strum::IntoEnumIterator,
+            regex::Regex, std::collections::HashSet,
+            strum::IntoEnumIterator,
         };
 
         let regex_img =

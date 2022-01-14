@@ -2,11 +2,11 @@
 name = "nekoslife"
 version = "0.2.1"
 authors = ["AkiaCode <catry.me@gmail.com>"]
+documentation = "https://docs.rs/nekoslife"
 edition = "2018"
-description = "nekos.life wrapper library"
 license = "MIT"
 repository = "https://github.com/AkiaCode/Nekos.life-rs"
-documentation = "https://docs.rs/nekoslife"
+description = "nekos.life wrapper library"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
@@ -21,16 +21,16 @@ nsfw = []
 blocking = ["reqwest/blocking"]
 
 [dependencies]
-serde = { version="1.0", features=["derive"] }
-reqwest = { version="0.11", default-features=false, features=["json"] }
-thiserror = "1.0"
-strum = { version = "0.23.0", features = ["derive"] }
-url = "2.2.2"
 lazy_static = "1.4.0"
+reqwest = { version = "0.11", default-features = false, features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+strum = { version = "0.23.0", features = ["derive"] }
+thiserror = "1.0"
+url = "2.2.2"
 
 [dev-dependencies]
-tokio = { version="1", features=["full"] }
 regex = "1.5.4"
+tokio = { version = "1", features = ["full"] }
 
 [[example]]
 name = "waifu_blocking"

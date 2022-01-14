@@ -3,6 +3,7 @@
 ### Use
 
 Add to dependencies:
+
 ```toml
 [dependencies]
 nekoslife = "0.2.1"
@@ -26,10 +27,13 @@ features = ["default-tls", "nsfw"]
 ### In code
 
 Example: get a waifu:
+
 ```rs
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
+    let url: String =
+        nekoslife::get(nekoslife::SfwCategory::Waifu)
+            .await?;
 
     println!("{}", url);
 

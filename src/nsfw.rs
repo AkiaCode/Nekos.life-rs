@@ -133,6 +133,9 @@ fn can_be_displayed_as_expected() {
     use strum::IntoEnumIterator;
 
     NsfwCategory::iter().for_each(|variant| {
-        assert_eq!(Into::<&'static str>::into(&variant), variant.to_url_path())
+        assert_eq!(
+            Into::<&'static str>::into(&variant),
+            variant.to_url_path()
+        )
     })
 }
