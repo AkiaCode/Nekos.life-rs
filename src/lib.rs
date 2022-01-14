@@ -175,27 +175,6 @@ pub use implementation::{get, get_with_client};
 mod test {
     use super::*;
 
-    async fn try_endpoint(
-        client: &reqwest::Client,
-        category: impl Into<Category>,
-    ) -> Result<(), (NekosLifeError, Category)> {
-        let category = category.into();
-        match get_with_client(client, category).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err((e, category)),
-        }
-    }
-
-    macro_rules! try_endpoints {
-        ($client:expr, $try_endpoint_fn:ident, $sfw_nsfw:ident, [$($(#[$at:meta])* $category:ident),* $(,)?]) => {
-            $(try_endpoints!($client, $try_endpoint_fn, $sfw_nsfw, $(#[$at])* $category);)*
-        };
-
-        ($client:expr, $try_endpoint_fn:ident, $sfw_nsfw:ident, $(#[$at:meta])* $category:ident) => {
-            $try_endpoint_fn($client, $(#[$at])* {$sfw_nsfw::$category}).await.unwrap(); // test will fail if any of them error
-        }
-    }
-
     #[test]
     fn dose_url_parsing_work() {
         assert_eq!(BASEURL.to_string(), "https://nekos.life/api/v2/");
@@ -218,189 +197,46 @@ mod test {
     }
 
     #[tokio::test]
-    async fn all_sfw_endpoints_work() {
-        let client = reqwest::Client::new();
-        try_endpoints!(
-            &client,
-            try_endpoint,
-            SfwCategory,
-            [
-                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug,
-                FoxGirl, Feed, Cuddle, NekoGif, Kemonomimi, Holo, Smug, Baka,
-                Woof, Wallpaper, Goose, Gecg, Avatar, Waifu, EightBall,
-            ]
-        );
-    }
+    async fn all_endpoints_work() {
+        use strum::IntoEnumIterator;
 
-    #[tokio::test]
-    async fn all_nsfw_endpoints_work() {
         let client = reqwest::Client::new();
-        try_endpoints!(
-            &client,
-            try_endpoint,
-            NsfwCategory,
-            [
-                RandomHentaiGif,
-                Pussy,
-                NekoGif,
-                Neko,
-                Lesbian,
-                Kuni,
-                Cumsluts,
-                Classic,
-                Boobs,
-                Bj,
-                Anal,
-                Avatar,
-                Yuri,
-                Trap,
-                Tits,
-                GirlSoloGif,
-                GirlSolo,
-                PussyWankGif,
-                PussyArt,
-                Kemonomimi,
-                Kitsune,
-                Keta,
-                Holo,
-                HoloEro,
-                Hentai,
-                Futanari,
-                Femdom,
-                FeetGif,
-                EroFeet,
-                Feet,
-                Ero,
-                EroKitsune,
-                EroKemonomimi,
-                EroNeko,
-                EroYuri,
-                CumArts,
-                BlowJob,
-                Spank,
-                Gasm,
-                #[allow(deprecated)]
-                SmallBoobs,
-            ]
-        );
+
+        for variant in SfwCategory::iter()
+            .map(Category::from)
+            .chain(NsfwCategory::iter().map(Category::from))
+        {
+            get_with_client(&client, variant).await.unwrap_or_else(|_| {
+                panic!("{} does not work", variant.to_url_path())
+            });
+            println!("{}: works", variant.to_url_path());
+        }
     }
 
     #[tokio::test]
     async fn no_new_endpoints() {
-        use regex::Regex;
-        use std::collections::HashSet;
+        use {
+            regex::Regex, std::collections::HashSet, strum::IntoEnumIterator,
+        };
 
-        let regex_category =
-            Regex::new(r"'(?P<ct>[\w\.]+)'").expect("failed to init regex");
         let regex_img =
             Regex::new(r"^GET,HEAD,OPTIONS\s+/api/v2/img/<(?P<eps>.*)>$")
                 .expect("failed to init regex");
 
-        let client = reqwest::Client::new();
-
-        macro_rules! known_image_endpoints {
-            ([$($sfw_nsfw:ident : [$($(#[$at:meta])* $category:ident),* $(,)?]),* $(,)?]) => {
-                [
-                    $(
-                        $($(#[$at])* {known_image_endpoints!($sfw_nsfw, $category)},)*
-                    )*
-
-                    // ignore those endpoints
-                    "v3",
-                    "nekoapi_v3.1"
-                ]
-            };
-
-            ($sfw_nsfw:ident, $category:ident $(,)?) => {
-                $sfw_nsfw::$category.to_url_path()
-            };
-        }
-
-        const KNOWN_ENDPOINTS: &[&str] = &known_image_endpoints!(
-            [
-                SfwCategory: [
-                    Tickle,
-                    Slap,
-                    Poke,
-                    Pat,
-                    Neko,
-                    Meow,
-                    Lizard,
-                    Kiss,
-                    Hug,
-                    FoxGirl,
-                    Feed,
-                    Cuddle,
-                    NekoGif,
-                    Kemonomimi,
-                    Holo,
-                    Smug,
-                    Baka,
-                    Woof,
-                    Wallpaper,
-                    Goose,
-                    Gecg,
-                    Avatar,
-                    Waifu,
-                    EightBall,
-                ],
-                NsfwCategory: [
-                    RandomHentaiGif,
-                    Pussy,
-                    NekoGif,
-                    Neko,
-                    Lesbian,
-                    Kuni,
-                    Cumsluts,
-                    Classic,
-                    Boobs,
-                    Bj,
-                    Anal,
-                    Avatar,
-                    Yuri,
-                    Trap,
-                    Tits,
-                    GirlSoloGif,
-                    GirlSolo,
-                    PussyWankGif,
-                    PussyArt,
-                    Kemonomimi,
-                    Kitsune,
-                    Keta,
-                    Holo,
-                    HoloEro,
-                    Hentai,
-                    Futanari,
-                    Femdom,
-                    FeetGif,
-                    EroFeet,
-                    Feet,
-                    Ero,
-                    EroKitsune,
-                    EroKemonomimi,
-                    EroNeko,
-                    EroYuri,
-                    CumArts,
-                    BlowJob,
-                    Spank,
-                    Gasm,
-                    #[allow(deprecated)]
-                    SmallBoobs,
-                ],
-            ]
-        );
-
         assert_eq!(
-            <HashSet::<_> as std::iter::FromIterator<_>>::from_iter(
-                KNOWN_ENDPOINTS.into_iter().map(|&x| x)
-            ),
-            regex_category
+            SfwCategory::iter()
+                .map(Into::into)
+                .chain(NsfwCategory::iter().map(Into::into))
+                .chain(["v3", "nekoapi_v3.1"])
+                .collect::<HashSet<_>>(),
+            Regex::new(r"'(?P<ct>[\w\.]+)'")
+                .expect("failed to init regex")
                 .captures_iter(
-                    client
+                    reqwest::Client::new()
                         .get(
-                            BASEURL
-                                .join("endpoints")
-                                .expect("Error occurred while parsing url")
+                            BASEURL.join("endpoints").expect(
+                                "an error occurred while joining the url"
+                            )
                         )
                         .send()
                         .await
@@ -409,13 +245,13 @@ mod test {
                         .await
                         .expect("failed to parse response")
                         .iter()
-                        .find_map(|f| regex_img.captures(f))
+                        .find_map(|line| regex_img.captures(line))
                         .expect("no match found")
                         .name("eps")
                         .expect("couldn't find capture named eps")
                         .as_str()
                 )
-                .map(|x| x
+                .map(|cap| cap
                     .name("ct")
                     .expect("couldn't find capture named ct")
                     .as_str())
