@@ -35,12 +35,12 @@ impl Category {
     /// # use nekoslife::{Category, SfwCategory};
     /// assert_eq!(Category::from(SfwCategory::Waifu).to_url_path(), "waifu");
     /// ```
-    pub const fn to_url_path(self) -> &'static str {
+    pub fn to_url_path(self) -> &'static str {
         match self {
             #[cfg(feature = "nsfw")]
-            Self::Nsfw(c) => c.to_url_path(),
+            Self::Nsfw(c) => c.into(),
             #[cfg(feature = "sfw")]
-            Self::Sfw(c) => c.to_url_path(),
+            Self::Sfw(c) => c.into(),
         }
     }
 }
@@ -99,7 +99,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
     /// #   Ok(())
     /// # }
-    pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::blocking::Client::new();
 
         get_with_client(&client, category)
@@ -150,7 +152,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
     /// #   Ok(())
     /// # }
-    pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub async fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::Client::new();
 
         get_with_client(&client, category).await
@@ -192,9 +196,9 @@ mod test {
             try_endpoint,
             SfwCategory,
             [
-                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug, FoxGirl, Feed, Cuddle,
-                NekoGif, Kemonomimi, Holo, Smug, Baka, Woof, Wallpaper, Goose, Gecg, Avatar, Waifu,
-                EightBall,
+                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug,
+                FoxGirl, Feed, Cuddle, NekoGif, Kemonomimi, Holo, Smug, Baka,
+                Woof, Wallpaper, Goose, Gecg, Avatar, Waifu, EightBall,
             ]
         );
     }

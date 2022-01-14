@@ -1,11 +1,17 @@
-#![cfg_attr(test, allow(deprecated))]
-
-use strum;
+#![allow(deprecated)]
 
 /// A nsfw category of images.
 // On new variants, update the all_nsfw_endpoints_work and no_new_images tests
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, strum::Display,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    strum::IntoStaticStr,
 )]
 #[cfg_attr(test, derive(strum::EnumIter))]
 #[strum(serialize_all = "lowercase")]
@@ -127,6 +133,6 @@ fn can_be_displayed_as_expected() {
     use strum::IntoEnumIterator;
 
     NsfwCategory::iter().for_each(|variant| {
-        assert_eq!(variant.to_string(), variant.to_url_path())
+        assert_eq!(Into::<&'static str>::into(&variant), variant.to_url_path())
     })
 }

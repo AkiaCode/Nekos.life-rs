@@ -1,9 +1,15 @@
-use strum;
-
 /// A sfw category of images.
 // On new variants, update the all_sfw_endpoints_work and no_new_images tests
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, strum::Display,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    strum::IntoStaticStr,
 )]
 #[cfg_attr(test, derive(strum::EnumIter))]
 #[strum(serialize_all = "snake_case")]
@@ -73,6 +79,6 @@ fn can_be_displayed_as_expected() {
     use strum::IntoEnumIterator;
 
     SfwCategory::iter().for_each(|variant| {
-        assert_eq!(variant.to_string(), variant.to_url_path())
+        assert_eq!(Into::<&'static str>::into(&variant), variant.to_url_path())
     })
 }
