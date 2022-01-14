@@ -1,12 +1,20 @@
+use {lazy_static::lazy_static, url::Url};
+
 /// Any error that can occur while accessing the api.
 #[derive(thiserror::Error, Debug)]
 pub enum NekosLifeError {
     #[error("reqwest error")]
     ReqwestError(#[from] reqwest::Error),
+
+    #[error("invalid url was provided")]
+    UrlParseError(#[from] url::ParseError),
 }
 
-/// The base api url.
-const BASEURL: &str = "https://nekos.life/api/v2";
+lazy_static! {
+    /// The base api url.
+    static ref BASEURL: Url =
+        Url::parse("https://nekos.life/api/v2/").expect("Invalid base url");
+}
 
 #[cfg(feature = "nsfw")]
 mod nsfw;
@@ -84,7 +92,7 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(BASEURL.join("img/")?.join(category.to_url_path())?)
             .send()?
             .json::<Response>()?;
 
@@ -134,7 +142,7 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(BASEURL.join("img/")?.join(category.to_url_path())?)
             .send()
             .await?
             .json::<Response>()
@@ -186,6 +194,27 @@ mod test {
         ($client:expr, $try_endpoint_fn:ident, $sfw_nsfw:ident, $(#[$at:meta])* $category:ident) => {
             $try_endpoint_fn($client, $(#[$at])* {$sfw_nsfw::$category}).await.unwrap(); // test will fail if any of them error
         }
+    }
+
+    #[test]
+    fn dose_url_parsing_work() {
+        assert_eq!(BASEURL.to_string(), "https://nekos.life/api/v2/");
+        assert_eq!(
+            BASEURL
+                .join("endpoints")
+                .expect("url parsing failed")
+                .to_string(),
+            "https://nekos.life/api/v2/endpoints"
+        );
+        assert_eq!(
+            BASEURL
+                .join("img/")
+                .expect("url parsing failed")
+                .join("category")
+                .expect("url parsing failed")
+                .to_string(),
+            "https://nekos.life/api/v2/img/category"
+        );
     }
 
     #[tokio::test]
@@ -354,7 +383,11 @@ mod test {
 
         async fn get_endpoints(client: &reqwest::Client) -> Vec<String> {
             client
-                .get(format!("{}/endpoints", BASEURL))
+                .get(
+                    BASEURL
+                        .join("endpoints")
+                        .expect("Error occurred while parsing url"),
+                )
                 .send()
                 .await
                 .unwrap()
@@ -380,7 +413,13 @@ mod test {
         let mut unknown_endpoints = vec![];
         for item in list.iter() {
             if !KNOWN_ENDPOINTS.contains(item) {
-                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item));
+                unknown_endpoints.push(
+                    BASEURL
+                        .join("img/")
+                        .expect("url parsing error")
+                        .join(item)
+                        .expect("url parsing error"),
+                );
             }
         }
 
