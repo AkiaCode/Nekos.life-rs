@@ -10,12 +10,10 @@ pub enum NekosLifeError {
     UrlParseError(#[from] url::ParseError),
 }
 
-/// The base api url.
-const BASEURL_STR: &str = "https://nekos.life/api/v2/";
-
 lazy_static! {
+    /// The base api url.
     static ref BASEURL: Url =
-        Url::parse(BASEURL_STR).expect("Invalid base url");
+        Url::parse("https://nekos.life/api/v2/").expect("Invalid base url");
 }
 
 #[cfg(feature = "nsfw")]
