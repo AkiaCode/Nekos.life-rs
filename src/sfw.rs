@@ -1,6 +1,12 @@
+use strum;
+
 /// A sfw category of images.
 // On new variants, update the all_sfw_endpoints_work and no_new_images tests
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, strum::Display,
+)]
+#[cfg_attr(test, derive(strum::EnumIter))]
+#[strum(serialize_all = "snake_case")]
 pub enum SfwCategory {
     Tickle,
     Slap,
@@ -14,6 +20,7 @@ pub enum SfwCategory {
     FoxGirl,
     Feed,
     Cuddle,
+    #[strum(serialize = "ngif")]
     NekoGif,
     Kemonomimi,
     Holo,
@@ -25,6 +32,7 @@ pub enum SfwCategory {
     Gecg,
     Avatar,
     Waifu,
+    #[strum(serialize = "8ball")]
     EightBall,
 }
 
@@ -58,4 +66,13 @@ impl SfwCategory {
             EightBall => "8ball",
         }
     }
+}
+
+#[test]
+fn can_be_displayed_as_expected() {
+    use strum::IntoEnumIterator;
+
+    SfwCategory::iter().for_each(|variant| {
+        assert_eq!(variant.to_string(), variant.to_url_path())
+    })
 }
