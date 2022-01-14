@@ -1,12 +1,22 @@
+use {lazy_static::lazy_static, url::Url};
+
 /// Any error that can occur while accessing the api.
 #[derive(thiserror::Error, Debug)]
 pub enum NekosLifeError {
     #[error("reqwest error")]
     ReqwestError(#[from] reqwest::Error),
+
+    #[error("invalid url was provided")]
+    UrlParseError(#[from] url::ParseError),
 }
 
 /// The base api url.
-const BASEURL: &str = "https://nekos.life/api/v2";
+const BASEURL_STR: &str = "https://nekos.life/api/v2/";
+
+lazy_static! {
+    static ref BASEURL: Url =
+        Url::parse(BASEURL_STR).expect("Invalid base url");
+}
 
 #[cfg(feature = "nsfw")]
 mod nsfw;
@@ -84,7 +94,7 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(BASEURL.join("img/")?.join(category.to_url_path())?)
             .send()?
             .json::<Response>()?;
 
@@ -99,7 +109,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
     /// #   Ok(())
     /// # }
-    pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::blocking::Client::new();
 
         get_with_client(&client, category)
@@ -132,7 +144,7 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(BASEURL.join("img/")?.join(category.to_url_path())?)
             .send()
             .await?
             .json::<Response>()
@@ -150,7 +162,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
     /// #   Ok(())
     /// # }
-    pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub async fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::Client::new();
 
         get_with_client(&client, category).await
@@ -184,6 +198,27 @@ mod test {
         }
     }
 
+    #[test]
+    fn dose_url_parsing_work() {
+        assert_eq!(BASEURL.to_string(), "https://nekos.life/api/v2/");
+        assert_eq!(
+            BASEURL
+                .join("endpoints")
+                .expect("url parsing failed")
+                .to_string(),
+            "https://nekos.life/api/v2/endpoints"
+        );
+        assert_eq!(
+            BASEURL
+                .join("img/")
+                .expect("url parsing failed")
+                .join("category")
+                .expect("url parsing failed")
+                .to_string(),
+            "https://nekos.life/api/v2/img/category"
+        );
+    }
+
     #[tokio::test]
     async fn all_sfw_endpoints_work() {
         let client = reqwest::Client::new();
@@ -192,9 +227,9 @@ mod test {
             try_endpoint,
             SfwCategory,
             [
-                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug, FoxGirl, Feed, Cuddle,
-                NekoGif, Kemonomimi, Holo, Smug, Baka, Woof, Wallpaper, Goose, Gecg, Avatar, Waifu,
-                EightBall,
+                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug,
+                FoxGirl, Feed, Cuddle, NekoGif, Kemonomimi, Holo, Smug, Baka,
+                Woof, Wallpaper, Goose, Gecg, Avatar, Waifu, EightBall,
             ]
         );
     }
@@ -350,7 +385,11 @@ mod test {
 
         async fn get_endpoints(client: &reqwest::Client) -> Vec<String> {
             client
-                .get(format!("{}/endpoints", BASEURL))
+                .get(
+                    BASEURL
+                        .join("endpoints")
+                        .expect("Error occurred while parsing url"),
+                )
                 .send()
                 .await
                 .unwrap()
@@ -376,7 +415,13 @@ mod test {
         let mut unknown_endpoints = vec![];
         for item in list.iter() {
             if !KNOWN_ENDPOINTS.contains(item) {
-                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item));
+                unknown_endpoints.push(
+                    BASEURL
+                        .join("img/")
+                        .expect("url parsing error")
+                        .join(item)
+                        .expect("url parsing error"),
+                );
             }
         }
 
