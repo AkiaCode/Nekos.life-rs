@@ -99,7 +99,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
     /// #   Ok(())
     /// # }
-    pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::blocking::Client::new();
 
         get_with_client(&client, category)
@@ -150,7 +152,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
     /// #   Ok(())
     /// # }
-    pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub async fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::Client::new();
 
         get_with_client(&client, category).await
@@ -192,9 +196,9 @@ mod test {
             try_endpoint,
             SfwCategory,
             [
-                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug, FoxGirl, Feed, Cuddle,
-                NekoGif, Kemonomimi, Holo, Smug, Baka, Woof, Wallpaper, Goose, Gecg, Avatar, Waifu,
-                EightBall,
+                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug,
+                FoxGirl, Feed, Cuddle, NekoGif, Kemonomimi, Holo, Smug, Baka,
+                Woof, Wallpaper, Goose, Gecg, Avatar, Waifu, EightBall,
             ]
         );
     }
@@ -254,6 +258,15 @@ mod test {
 
     #[tokio::test]
     async fn no_new_endpoints() {
+        use regex::Regex;
+        use std::collections::HashSet;
+
+        let regex_category =
+            Regex::new(r"'(?P<ct>[\w\.]+)'").expect("failed to init regex");
+        let regex_img =
+            Regex::new(r"^GET,HEAD,OPTIONS\s+/api/v2/img/<(?P<eps>.*)>$")
+                .expect("failed to init regex");
+
         let client = reqwest::Client::new();
 
         macro_rules! known_image_endpoints {
@@ -348,43 +361,32 @@ mod test {
             ]
         );
 
-        async fn get_endpoints(client: &reqwest::Client) -> Vec<String> {
-            client
-                .get(format!("{}/endpoints", BASEURL))
-                .send()
-                .await
-                .unwrap()
-                .json()
-                .await
-                .unwrap()
-        }
-
-        let endpoints = get_endpoints(&client).await;
-        let image_endpoints = endpoints
-            .iter()
-            .find(|it| it.starts_with("GET,HEAD,OPTIONS     /api/v2/img/"))
-            .unwrap()
-            .as_str();
-        let comma_list = image_endpoints
-            .trim_start_matches("GET,HEAD,OPTIONS     /api/v2/img/<")
-            .trim_end_matches(">");
-        let list = comma_list
-            .split(',')
-            .map(|it| it.trim().trim_start_matches('\'').trim_end_matches('\''))
-            .collect::<Vec<_>>();
-
-        let mut unknown_endpoints = vec![];
-        for item in list.iter() {
-            if !KNOWN_ENDPOINTS.contains(item) {
-                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item));
-            }
-        }
-
-        if !unknown_endpoints.is_empty() {
-            panic!(
-                "Looks like there are new endpoints, please add them: {:?}",
-                unknown_endpoints
-            );
-        }
+        assert_eq!(
+            <HashSet::<_> as std::iter::FromIterator<_>>::from_iter(
+                KNOWN_ENDPOINTS.into_iter().map(|&x| x)
+            ),
+            regex_category
+                .captures_iter(
+                    client
+                        .get(format!("{}/endpoints", BASEURL))
+                        .send()
+                        .await
+                        .expect("failed to send request")
+                        .json::<Vec<String>>()
+                        .await
+                        .expect("failed to parse response")
+                        .iter()
+                        .find_map(|f| regex_img.captures(f))
+                        .expect("no match found")
+                        .name("eps")
+                        .expect("couldn't find capture named eps")
+                        .as_str()
+                )
+                .map(|x| x
+                    .name("ct")
+                    .expect("couldn't find capture named ct")
+                    .as_str())
+                .collect::<HashSet<_>>()
+        );
     }
 }
