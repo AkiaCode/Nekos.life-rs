@@ -1,6 +1,7 @@
 /// A sfw category of images.
 // On new variants, update the all_sfw_endpoints_work and no_new_images tests
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[allow(missing_docs)]
 pub enum SfwCategory {
     Tickle,
     Slap,
@@ -29,6 +30,7 @@ pub enum SfwCategory {
 }
 
 impl SfwCategory {
+    /// converts [SfwCategory] variants to `&'static str`
     pub const fn to_url_path(self) -> &'static str {
         use SfwCategory::*;
         match self {

@@ -1,6 +1,7 @@
 /// A nsfw category of images.
 // On new variants, update the all_nsfw_endpoints_work and no_new_images tests
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[allow(missing_docs)]
 pub enum NsfwCategory {
     RandomHentaiGif,
     Pussy,
@@ -48,6 +49,7 @@ pub enum NsfwCategory {
 }
 
 impl NsfwCategory {
+    /// converts [NsfwCategory] variants to `&'static str`
     pub const fn to_url_path(self) -> &'static str {
         use NsfwCategory::*;
         match self {

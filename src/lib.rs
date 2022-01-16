@@ -1,6 +1,12 @@
+/*!
+ * nekos.life wrapper library
+ */
+#![deny(missing_docs)]
+
 /// Any error that can occur while accessing the api.
 #[derive(thiserror::Error, Debug)]
 pub enum NekosLifeError {
+    /// represents errors from [`reqwest`]
     #[error("reqwest error")]
     ReqwestError(#[from] reqwest::Error),
 }
@@ -18,6 +24,7 @@ pub use nsfw::NsfwCategory;
 #[cfg(feature = "sfw")]
 pub use sfw::SfwCategory;
 
+/// enum that represents the Category of images
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Category {
     /// A nsfw category.
