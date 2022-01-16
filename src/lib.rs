@@ -84,7 +84,7 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(format!("{BASEURL}/img/{}", category.to_url_path()))
             .send()?
             .json::<Response>()?;
 
@@ -132,7 +132,7 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(format!("{BASEURL}/img/{}", category.to_url_path()))
             .send()
             .await?
             .json::<Response>()
@@ -350,7 +350,7 @@ mod test {
 
         async fn get_endpoints(client: &reqwest::Client) -> Vec<String> {
             client
-                .get(format!("{}/endpoints", BASEURL))
+                .get(format!("{BASEURL}/endpoints"))
                 .send()
                 .await
                 .unwrap()
@@ -376,7 +376,7 @@ mod test {
         let mut unknown_endpoints = vec![];
         for item in list.iter() {
             if !KNOWN_ENDPOINTS.contains(item) {
-                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item));
+                unknown_endpoints.push(format!("{BASEURL}/img/{item}",));
             }
         }
 
