@@ -1,11 +1,35 @@
-/// A nsfw category of images.
-// On new variants, update the all_nsfw_endpoints_work and no_new_images tests
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum NsfwCategory {
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash,
+)]
+pub enum Category {
+    Tickle,
+    Slap,
+    Poke,
+    Pat,
+    Neko,
+    Meow,
+    Lizard,
+    Kiss,
+    Hug,
+    FoxGirl,
+    Feed,
+    Cuddle,
+    NekoGif,
+    Kemonomimi,
+    Holo,
+    Smug,
+    Baka,
+    Woof,
+    Wallpaper,
+    Goose,
+    Gecg,
+    Avatar,
+    Waifu,
+    EightBall,
     RandomHentaiGif,
     Pussy,
-    NekoGif,
-    Neko,
+    NsfwNekoGif,
+    Lewd,
     Lesbian,
     Kuni,
     Cumsluts,
@@ -13,7 +37,7 @@ pub enum NsfwCategory {
     Boobs,
     Bj,
     Anal,
-    Avatar,
+    NsfwAvatar,
     Yuri,
     Trap,
     Tits,
@@ -21,10 +45,10 @@ pub enum NsfwCategory {
     GirlSolo,
     PussyWankGif,
     PussyArt,
-    Kemonomimi,
+    LewdKemonomimi,
     Kitsune,
     Keta,
-    Holo,
+    HoloLewd,
     HoloEro,
     Hentai,
     Futanari,
@@ -47,14 +71,45 @@ pub enum NsfwCategory {
     SmallBoobs,
 }
 
-impl NsfwCategory {
+impl Category {
+    /// Gets the path to append after [`BASEURL`]+ to make a request to get an image / gif url.
+    /// # Examples
+    /// ```rust
+    /// # use nekoslife::{Category, SfwCategory};
+    /// assert_eq!(Category::from(SfwCategory::Waifu).to_url_path(), "waifu");
+    /// ```
     pub const fn to_url_path(self) -> &'static str {
-        use NsfwCategory::*;
+        use Category::*;
+
         match self {
+            Tickle => "tickle",
+            Slap => "slap",
+            Poke => "poke",
+            Pat => "pat",
+            Neko => "neko",
+            Meow => "meow",
+            Lizard => "lizard",
+            Kiss => "kiss",
+            Hug => "hug",
+            FoxGirl => "fox_girl",
+            Feed => "feed",
+            Cuddle => "cuddle",
+            NekoGif => "ngif",
+            Kemonomimi => "kemonomimi",
+            Holo => "holo",
+            Smug => "smug",
+            Baka => "baka",
+            Woof => "woof",
+            Wallpaper => "wallpaper",
+            Goose => "goose",
+            Gecg => "gecg",
+            Avatar => "avatar",
+            Waifu => "waifu",
+            EightBall => "8ball",
             RandomHentaiGif => "Random_hentai_gif",
             Pussy => "pussy",
-            NekoGif => "nsfw_neko_gif",
-            Neko => "lewd",
+            NsfwNekoGif => "nsfw_neko_gif",
+            Lewd => "lewd",
             Lesbian => "les",
             Kuni => "kuni",
             Cumsluts => "cum",
@@ -62,7 +117,7 @@ impl NsfwCategory {
             Boobs => "boobs",
             Bj => "bj",
             Anal => "anal",
-            Avatar => "nsfw_avatar",
+            NsfwAvatar => "nsfw_avatar",
             Yuri => "yuri",
             Trap => "trap",
             Tits => "tits",
@@ -70,10 +125,10 @@ impl NsfwCategory {
             GirlSolo => "solo",
             PussyWankGif => "pwankg",
             PussyArt => "pussy_jpg",
-            Kemonomimi => "lewdkemo",
+            LewdKemonomimi => "lewdkemo",
             Kitsune => "lewdk",
             Keta => "keta",
-            Holo => "hololewd",
+            HoloLewd => "hololewd",
             HoloEro => "holoero",
             Hentai => "hentai",
             Futanari => "futanari",

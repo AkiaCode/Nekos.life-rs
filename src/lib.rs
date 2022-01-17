@@ -8,56 +8,8 @@ pub enum NekosLifeError {
 /// The base api url.
 const BASEURL: &str = "https://nekos.life/api/v2";
 
-#[cfg(feature = "nsfw")]
-mod nsfw;
-#[cfg(feature = "sfw")]
-mod sfw;
-
-#[cfg(feature = "nsfw")]
-pub use nsfw::NsfwCategory;
-#[cfg(feature = "sfw")]
-pub use sfw::SfwCategory;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum Category {
-    /// A nsfw category.
-    #[cfg(feature = "nsfw")]
-    Nsfw(NsfwCategory),
-    /// A sfw category.
-    #[cfg(feature = "sfw")]
-    Sfw(SfwCategory),
-}
-
-impl Category {
-    /// Gets the path to append after [`BASEURL`]+/img/ to make a request to get an image / gif url.
-    /// # Examples
-    /// ```rust
-    /// # use nekoslife::{Category, SfwCategory};
-    /// assert_eq!(Category::from(SfwCategory::Waifu).to_url_path(), "waifu");
-    /// ```
-    pub const fn to_url_path(self) -> &'static str {
-        match self {
-            #[cfg(feature = "nsfw")]
-            Self::Nsfw(c) => c.to_url_path(),
-            #[cfg(feature = "sfw")]
-            Self::Sfw(c) => c.to_url_path(),
-        }
-    }
-}
-
-#[cfg(feature = "nsfw")]
-impl From<NsfwCategory> for Category {
-    fn from(c: NsfwCategory) -> Self {
-        Self::Nsfw(c)
-    }
-}
-
-#[cfg(feature = "sfw")]
-impl From<SfwCategory> for Category {
-    fn from(c: SfwCategory) -> Self {
-        Self::Sfw(c)
-    }
-}
+mod category;
+use category::Category;
 
 #[cfg(feature = "blocking")]
 mod implementation {
@@ -84,7 +36,11 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(format!(
+                "{}/img/{}",
+                BASEURL,
+                category.to_url_path()
+            ))
             .send()?
             .json::<Response>()?;
 
@@ -99,7 +55,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
     /// #   Ok(())
     /// # }
-    pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::blocking::Client::new();
 
         get_with_client(&client, category)
@@ -132,7 +90,11 @@ mod implementation {
         }
 
         let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
+            .get(format!(
+                "{}/img/{}",
+                BASEURL,
+                category.to_url_path()
+            ))
             .send()
             .await?
             .json::<Response>()
@@ -150,7 +112,9 @@ mod implementation {
     ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
     /// #   Ok(())
     /// # }
-    pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
+    pub async fn get(
+        category: impl Into<Category>,
+    ) -> Result<String, NekosLifeError> {
         let client = reqwest::Client::new();
 
         get_with_client(&client, category).await
@@ -185,32 +149,41 @@ mod test {
     }
 
     #[tokio::test]
-    async fn all_sfw_endpoints_work() {
+    async fn all_endpoints_work() {
         let client = reqwest::Client::new();
         try_endpoints!(
             &client,
             try_endpoint,
-            SfwCategory,
+            Category,
             [
-                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug, FoxGirl, Feed, Cuddle,
-                NekoGif, Kemonomimi, Holo, Smug, Baka, Woof, Wallpaper, Goose, Gecg, Avatar, Waifu,
+                Tickle,
+                Slap,
+                Poke,
+                Pat,
+                Neko,
+                Meow,
+                Lizard,
+                Kiss,
+                Hug,
+                FoxGirl,
+                Feed,
+                Cuddle,
+                NekoGif,
+                Kemonomimi,
+                Holo,
+                Smug,
+                Baka,
+                Woof,
+                Wallpaper,
+                Goose,
+                Gecg,
+                Avatar,
+                Waifu,
                 EightBall,
-            ]
-        );
-    }
-
-    #[tokio::test]
-    async fn all_nsfw_endpoints_work() {
-        let client = reqwest::Client::new();
-        try_endpoints!(
-            &client,
-            try_endpoint,
-            NsfwCategory,
-            [
                 RandomHentaiGif,
                 Pussy,
-                NekoGif,
-                Neko,
+                NsfwNekoGif,
+                Lewd,
                 Lesbian,
                 Kuni,
                 Cumsluts,
@@ -218,7 +191,7 @@ mod test {
                 Boobs,
                 Bj,
                 Anal,
-                Avatar,
+                NsfwAvatar,
                 Yuri,
                 Trap,
                 Tits,
@@ -226,10 +199,10 @@ mod test {
                 GirlSolo,
                 PussyWankGif,
                 PussyArt,
-                Kemonomimi,
+                LewdKemonomimi,
                 Kitsune,
                 Keta,
-                Holo,
+                HoloLewd,
                 HoloEro,
                 Hentai,
                 Futanari,
@@ -276,7 +249,7 @@ mod test {
 
         const KNOWN_ENDPOINTS: &[&str] = &known_image_endpoints!(
             [
-                SfwCategory: [
+                Category: [
                     Tickle,
                     Slap,
                     Poke,
@@ -302,11 +275,11 @@ mod test {
                     Waifu,
                     EightBall,
                 ],
-                NsfwCategory: [
+                Category: [
                     RandomHentaiGif,
                     Pussy,
-                    NekoGif,
-                    Neko,
+                    NsfwNekoGif,
+                    Lewd,
                     Lesbian,
                     Kuni,
                     Cumsluts,
@@ -314,7 +287,7 @@ mod test {
                     Boobs,
                     Bj,
                     Anal,
-                    Avatar,
+                    NsfwAvatar,
                     Yuri,
                     Trap,
                     Tits,
@@ -322,10 +295,10 @@ mod test {
                     GirlSolo,
                     PussyWankGif,
                     PussyArt,
-                    Kemonomimi,
+                    LewdKemonomimi,
                     Kitsune,
                     Keta,
-                    Holo,
+                    HoloLewd,
                     HoloEro,
                     Hentai,
                     Futanari,
@@ -348,7 +321,9 @@ mod test {
             ]
         );
 
-        async fn get_endpoints(client: &reqwest::Client) -> Vec<String> {
+        async fn get_endpoints(
+            client: &reqwest::Client,
+        ) -> Vec<String> {
             client
                 .get(format!("{}/endpoints", BASEURL))
                 .send()
@@ -362,21 +337,34 @@ mod test {
         let endpoints = get_endpoints(&client).await;
         let image_endpoints = endpoints
             .iter()
-            .find(|it| it.starts_with("GET,HEAD,OPTIONS     /api/v2/img/"))
+            .find(|it| {
+                it.starts_with(
+                    "GET,HEAD,OPTIONS     /api/v2/img/",
+                )
+            })
             .unwrap()
             .as_str();
         let comma_list = image_endpoints
-            .trim_start_matches("GET,HEAD,OPTIONS     /api/v2/img/<")
+            .trim_start_matches(
+                "GET,HEAD,OPTIONS     /api/v2/img/<",
+            )
             .trim_end_matches(">");
         let list = comma_list
             .split(',')
-            .map(|it| it.trim().trim_start_matches('\'').trim_end_matches('\''))
+            .map(|it| {
+                it.trim()
+                    .trim_start_matches('\'')
+                    .trim_end_matches('\'')
+            })
             .collect::<Vec<_>>();
 
         let mut unknown_endpoints = vec![];
         for item in list.iter() {
             if !KNOWN_ENDPOINTS.contains(item) {
-                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item));
+                unknown_endpoints.push(format!(
+                    "{}/img/{}",
+                    BASEURL, item
+                ));
             }
         }
 
