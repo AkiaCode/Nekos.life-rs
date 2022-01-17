@@ -9,7 +9,7 @@ pub enum NekosLifeError {
 const BASEURL: &str = "https://nekos.life/api/v2";
 
 mod category;
-use category::Category;
+pub use category::Category;
 
 #[cfg(feature = "blocking")]
 mod implementation {
