@@ -35,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         nekoslife::get(nekoslife::SfwCategory::Waifu)
             .await?;
 
-    println!("{}", url);
+    println!("{url}");
 
     Ok(())
 }
