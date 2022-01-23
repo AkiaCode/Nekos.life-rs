@@ -13,6 +13,7 @@
 )]
 #[cfg_attr(test, derive(strum::EnumIter))]
 #[strum(serialize_all = "snake_case")]
+#[allow(missing_docs)]
 pub enum SfwCategory {
     Tickle,
     Slap,
@@ -43,6 +44,7 @@ pub enum SfwCategory {
 }
 
 impl SfwCategory {
+    /// converts [SfwCategory] variants to `&'static str`
     pub const fn to_url_path(self) -> &'static str {
         use SfwCategory::*;
         match self {

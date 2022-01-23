@@ -15,6 +15,7 @@
 )]
 #[cfg_attr(test, derive(strum::EnumIter))]
 #[strum(serialize_all = "lowercase")]
+#[allow(missing_docs)]
 pub enum NsfwCategory {
     #[strum(serialize = "Random_hentai_gif")]
     RandomHentaiGif,
@@ -80,6 +81,7 @@ pub enum NsfwCategory {
 }
 
 impl NsfwCategory {
+    /// converts [NsfwCategory] variants to `&'static str`
     pub const fn to_url_path(self) -> &'static str {
         use NsfwCategory::*;
         match self {
