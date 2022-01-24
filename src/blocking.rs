@@ -1,8 +1,6 @@
 use crate::{
-    category::Category,
-    error::NekosLifeError,
-    implementation::{get, get_with_client},
-    r#static::BASEURL,
+    category::Category, error::NekosLifeError,
+    implementation::get_with_client,
 };
 
 /// Gets the url of an image / gif from the api, from the given category,
@@ -18,14 +16,11 @@ pub fn blocking_get_with_client(
     client: &reqwest::Client,
     category: impl Into<Category>,
 ) -> Result<String, NekosLifeError> {
-    let category = category.into();
-
     tokio::runtime::Builder::new_current_thread()
         .enable_time()
         .enable_io()
-        .build()
-        .unwrap()
-        .block_on(get_with_client(&client, category))
+        .build()?
+        .block_on(get_with_client(&client, category.into()))
 }
 
 /// Gets the url of an image / gif from the api, from the given category,

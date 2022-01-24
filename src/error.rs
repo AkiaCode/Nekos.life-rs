@@ -8,4 +8,8 @@ pub enum NekosLifeError {
     #[error("invalid url was provided")]
     #[allow(missing_docs)]
     UrlParseError(#[from] url::ParseError),
+
+    /// occurs when failed to create new tokio runtime
+    #[error("unable to create runtime")]
+    RuntimeError(#[from] std::io::Error),
 }
