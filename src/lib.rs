@@ -23,59 +23,8 @@ lazy_static! {
         Url::parse("https://nekos.life/api/v2/").expect("Invalid base url");
 }
 
-#[cfg(feature = "nsfw")]
-mod nsfw;
-#[cfg(feature = "sfw")]
-mod sfw;
-
-#[cfg(feature = "nsfw")]
-pub use nsfw::NsfwCategory;
-#[cfg(feature = "sfw")]
-pub use sfw::SfwCategory;
-
-/// enum that represents the Category of images
-#[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash,
-)]
-pub enum Category {
-    /// A nsfw category.
-    #[cfg(feature = "nsfw")]
-    Nsfw(NsfwCategory),
-    /// A sfw category.
-    #[cfg(feature = "sfw")]
-    Sfw(SfwCategory),
-}
-
-impl Category {
-    /// Gets the path to append after [`BASEURL`]+/img/ to make a request to get an image / gif url.
-    /// # Examples
-    /// ```rust
-    /// # use nekoslife::{Category, SfwCategory};
-    /// assert_eq!(Category::from(SfwCategory::Waifu).to_url_path(), "waifu");
-    /// ```
-    pub fn to_url_path(self) -> &'static str {
-        match self {
-            #[cfg(feature = "nsfw")]
-            Self::Nsfw(c) => c.into(),
-            #[cfg(feature = "sfw")]
-            Self::Sfw(c) => c.into(),
-        }
-    }
-}
-
-#[cfg(feature = "nsfw")]
-impl From<NsfwCategory> for Category {
-    fn from(c: NsfwCategory) -> Self {
-        Self::Nsfw(c)
-    }
-}
-
-#[cfg(feature = "sfw")]
-impl From<SfwCategory> for Category {
-    fn from(c: SfwCategory) -> Self {
-        Self::Sfw(c)
-    }
-}
+mod category;
+pub use category::Category;
 
 #[cfg(feature = "blocking")]
 mod implementation {
@@ -141,7 +90,7 @@ mod implementation {
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
     ///     let client = reqwest::Client::new();
-    ///     let url: String = nekoslife::get_with_client(&client, nekoslife::SfwCategory::Waifu).await?;
+    ///     let url: String = nekoslife::get_with_client(&client, nekoslife::Category::Waifu).await?;
     /// #   Ok(())
     /// # }
     pub async fn get_with_client(
@@ -175,7 +124,7 @@ mod implementation {
     /// ```rust,no_run
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
+    ///     let url: String = nekoslife::get(nekoslife::Category::Waifu).await?;
     /// #   Ok(())
     /// # }
     pub async fn get(
@@ -223,10 +172,7 @@ mod test {
 
         let client = reqwest::Client::new();
 
-        for variant in SfwCategory::iter()
-            .map(Category::from)
-            .chain(NsfwCategory::iter().map(Category::from))
-        {
+        for variant in Category::iter() {
             get_with_client(&client, variant)
                 .await
                 .unwrap_or_else(|_| {
@@ -251,9 +197,8 @@ mod test {
                 .expect("failed to init regex");
 
         assert_eq!(
-            SfwCategory::iter()
-                .map(Into::into)
-                .chain(NsfwCategory::iter().map(Into::into))
+            Category::iter()
+                .map(|c| c.to_url_path())
                 .chain(["v3", "nekoapi_v3.1"])
                 .collect::<HashSet<_>>(),
             Regex::new(r"'(?P<ct>[\w\.]+)'")
