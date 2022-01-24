@@ -2,6 +2,7 @@
  * nekos.life wrapper library
  */
 #![deny(missing_docs)]
+#![forbid(unsafe_code)]
 
 mod category;
 mod error;
