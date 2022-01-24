@@ -3,7 +3,13 @@ use {lazy_static::lazy_static, url::Url};
 lazy_static! {
     /// The base api url.
     pub(crate) static ref BASEURL: Url =
-        Url::parse("https://nekos.life/api/v2/")
+        Url::parse(
+            &std::env::var("NEKOS_LIFE_API_URL")
+                .unwrap_or(
+                    "https://nekos.life/api/v2/"
+                        .to_owned()
+                )
+        )
             .expect("Invalid base url");
 }
 
