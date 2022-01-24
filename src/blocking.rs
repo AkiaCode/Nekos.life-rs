@@ -1,4 +1,9 @@
-use super::*;
+use crate::{
+    category::Category,
+    error::NekosLifeError,
+    implementation::{get, get_with_client},
+    r#static::BASEURL,
+};
 
 /// Gets the url of an image / gif from the api, from the given category,
 /// and using the given client.
@@ -9,27 +14,18 @@ use super::*;
 ///     let url: String = nekoslife::get_with_client(&client, nekoslife::SfwCategory::Waifu)?;
 /// #   Ok(())
 /// # }
-pub fn get_with_client(
-    client: &reqwest::blocking::Client,
+pub fn blocking_get_with_client(
+    client: &reqwest::Client,
     category: impl Into<Category>,
 ) -> Result<String, NekosLifeError> {
     let category = category.into();
 
-    #[derive(serde::Deserialize)]
-    struct Response {
-        url: String,
-    }
-
-    let resp = client
-        .get(
-            BASEURL
-                .join("img/")?
-                .join(category.to_url_path())?,
-        )
-        .send()?
-        .json::<Response>()?;
-
-    Ok(resp.url)
+    tokio::runtime::Builder::new_current_thread()
+        .enable_time()
+        .enable_io()
+        .build()
+        .unwrap()
+        .block_on(get_with_client(&client, category))
 }
 
 /// Gets the url of an image / gif from the api, from the given category,
@@ -40,10 +36,10 @@ pub fn get_with_client(
 ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
 /// #   Ok(())
 /// # }
-pub fn get(
+pub fn blocking_get(
     category: impl Into<Category>,
 ) -> Result<String, NekosLifeError> {
-    let client = reqwest::blocking::Client::new();
+    let client = reqwest::Client::new();
 
-    get_with_client(&client, category)
+    blocking_get_with_client(&client, category)
 }
