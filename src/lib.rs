@@ -13,7 +13,9 @@ use r#static::BASEURL;
 
 pub use {
     category::Category,
-    implementation::{get, get_with_client},
+    implementation::{
+        get, get_with_client, types::IntoUrl,
+    },
     types::{NekosLifeError, Response, Result, UrlString},
 };
 

@@ -1,6 +1,8 @@
-use super::*;
 use {
-    pretty_assertions::assert_eq, std::error,
+    super::*,
+    crate::{Category, BASEURL},
+    pretty_assertions::assert_eq,
+    std::error,
     strum::IntoEnumIterator,
 };
 

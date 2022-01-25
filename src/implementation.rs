@@ -1,5 +1,5 @@
 use {
-    crate::{Category, Response, BASEURL},
+    crate::{IntoUrl, Response},
     reqwest::{self, Client},
     types::ApiResponseBody,
 };
@@ -59,24 +59,20 @@ use {
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
-pub async fn get_with_client(
+pub async fn get_with_client<T>(
     client: &reqwest::Client,
-    category: impl Into<Category>,
-) -> Response {
-    let category = category.into();
-
-    let resp = client
-        .get(
-            BASEURL
-                .join("img/")?
-                .join(category.to_url_path())?,
-        )
+    endpoint: T,
+) -> Response
+where
+    T: IntoUrl,
+{
+    Ok(client
+        .get(endpoint.into_url()?)
         .send()
         .await?
         .json::<ApiResponseBody>()
-        .await?;
-
-    Ok(resp.url)
+        .await?
+        .url)
 }
 
 /// Gets the image url
@@ -117,15 +113,14 @@ pub async fn get_with_client(
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
-pub async fn get(
-    category: impl Into<Category>,
-) -> Response {
-    let client = Client::new();
-
-    get_with_client(&client, category).await
+pub async fn get<T>(endpoint: T) -> Response
+where
+    T: IntoUrl,
+{
+    get_with_client(&Client::new(), endpoint).await
 }
 
-mod types;
+pub mod types;
 
 #[cfg(test)]
 mod tests;

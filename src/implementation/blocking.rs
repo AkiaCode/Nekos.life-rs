@@ -1,6 +1,9 @@
 use {
-    super::get_with_client as async_get_with_client,
-    crate::{category::Category, Response},
+    super::{
+        get_with_client as async_get_with_client,
+        types::IntoUrl,
+    },
+    crate::Response,
     reqwest::{self, Client},
 };
 
@@ -56,18 +59,18 @@ use {
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
-pub fn get_with_client(
+pub fn get_with_client<T>(
     client: &reqwest::Client,
-    category: impl Into<Category>,
-) -> Response {
+    endpoint: T,
+) -> Response
+where
+    T: IntoUrl,
+{
     tokio::runtime::Builder::new_current_thread()
         .enable_time()
         .enable_io()
         .build()?
-        .block_on(async_get_with_client(
-            &client,
-            category.into(),
-        ))
+        .block_on(async_get_with_client(&client, endpoint))
 }
 
 /// Gets the image url in blocking context.
@@ -102,8 +105,11 @@ pub fn get_with_client(
 /// ```
 ///
 /// [get]: crate::get
-pub fn get(category: impl Into<Category>) -> Response {
-    get_with_client(&Client::new(), category)
+pub fn get<T>(endpoint: T) -> Response
+where
+    T: IntoUrl,
+{
+    get_with_client(&Client::new(), endpoint)
 }
 
 #[cfg(test)]

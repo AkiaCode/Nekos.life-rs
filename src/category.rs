@@ -1,5 +1,7 @@
 #![allow(deprecated)]
 
+use crate::{types, IntoUrl, BASEURL};
+
 /// A category of images.
 // On new variants, update the all_nsfw_endpoints_work and no_new_images tests
 #[derive(
@@ -117,8 +119,15 @@ impl Category {
     /// # use nekoslife::{Category};
     /// assert_eq!(Category::from(Category::Waifu).to_url_path(), "waifu");
     /// ```
+    #[deprecated]
     pub fn to_url_path(self) -> &'static str {
         self.into()
+    }
+}
+
+impl IntoUrl for Category {
+    fn into_url(self) -> types::Result<url::Url> {
+        Ok(BASEURL.join("img/")?.join(self.into())?)
     }
 }
 
