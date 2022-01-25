@@ -12,7 +12,7 @@ use super::*;
 pub fn get_with_client(
     client: &reqwest::blocking::Client,
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
+) -> Response {
     let category = category.into();
 
     #[derive(serde::Deserialize)]
@@ -40,9 +40,7 @@ pub fn get_with_client(
 ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
 /// #   Ok(())
 /// # }
-pub fn get(
-    category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
+pub fn get(category: impl Into<Category>) -> Response {
     let client = reqwest::blocking::Client::new();
 
     get_with_client(&client, category)
