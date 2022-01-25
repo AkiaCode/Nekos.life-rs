@@ -1,4 +1,8 @@
-use {super::*, std::str, strum::IntoEnumIterator};
+use {
+    super::*, crate::NekosLifeError,
+    pretty_assertions::assert_eq, std::str,
+    strum::IntoEnumIterator,
+};
 
 #[test]
 fn can_be_displayed() {
@@ -54,4 +58,26 @@ fn returns_error_when_invalid_category_has_been_given(
         .map(<Category as str::FromStr>::from_str)
         .all(|e| e
             .eq(&Err(strum::ParseError::VariantNotFound)))))
+}
+
+#[test]
+fn can_strum_parse_error_converted_to_nekos_life_error_as_expected(
+) {
+    // ensures that the `strum::ParseError` can be converted to
+    // `NekoErr` as expected.
+    const UNKNOWUN_ENDPOINT: &str = "unknown";
+
+    if let Err(err) = <Category as str::FromStr>::from_str(
+        UNKNOWUN_ENDPOINT,
+    ) {
+        assert_eq!(
+            NekosLifeError::UnknownEndpoint {
+                error: err,
+                url: UNKNOWUN_ENDPOINT.to_owned(),
+            }.to_string(),
+            format!(
+                "Matching variant not found: `{UNKNOWUN_ENDPOINT}` is not a valid category or endpoint"
+            )
+        );
+    }
 }

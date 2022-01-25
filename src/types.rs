@@ -26,6 +26,18 @@ pub enum NekosLifeError {
     /// occurs when failed to create new tokio runtime
     #[error("unable to create runtime")]
     RuntimeError(#[from] std::io::Error),
+
+    /// invalid category string.
+    ///
+    /// occurs when given string does not exists in the [`Category`] enum.
+    /// this error will be from [`strum::ParseError`]
+    #[error("{error}: `{url}` is not a valid category or endpoint")]
+    UnknownEndpoint {
+        /// the url which couldn't be parsed
+        url: String,
+        /// strum parse error
+        error: strum::ParseError,
+    },
 }
 
 #[cfg(test)]
