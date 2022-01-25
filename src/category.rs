@@ -12,6 +12,7 @@
     Ord,
     Hash,
     strum::IntoStaticStr,
+    strum::Display,
 )]
 #[cfg_attr(test, derive(strum::EnumIter))]
 #[strum(serialize_all = "snake_case")]
