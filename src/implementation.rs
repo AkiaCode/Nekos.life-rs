@@ -1,4 +1,4 @@
-use crate::{r#static::BASEURL, Category, NekosLifeError};
+use crate::{Category, NekosLifeError, BASEURL};
 
 /// Gets the image url with the given client.
 ///

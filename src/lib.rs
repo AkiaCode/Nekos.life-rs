@@ -9,6 +9,8 @@ mod r#static;
 
 mod implementation;
 
+use r#static::BASEURL;
+
 pub use {
     category::Category,
     error::NekosLifeError,
