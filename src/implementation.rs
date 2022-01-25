@@ -21,11 +21,7 @@ use crate::{r#static::BASEURL, Category, NekosLifeError};
 /// most cases, however, will not need to call this directly.
 /// if you find some simplest way, consider using [`blocking_get`](blocking_get) instead.
 ///
-/// # Returns
-///
-/// On success, the [`Ok(String)`](String) which contains the `URL` of the image or GIF
-/// found by using the given endpoint from the `API` returns.\
-/// Otherwise, it will return the [`Err(NekosLifeError)`](NekosLifeError) if any error is encountered.
+#[doc = include_str!("../docs/return.md")]
 ///
 /// # Examples
 ///
@@ -98,11 +94,7 @@ pub async fn get_with_client(
 /// if you have to reuse the client or set your client carefully,
 /// consider using the [`get_with_client`] function instead.
 ///
-/// # Returns
-///
-/// On success, the [`Ok(String)`](String) which contains the `URL` of the image or GIF
-/// found by using the given endpoint from the `API` returns.\
-/// Otherwise, it will return the [`Err(NekosLifeError)`](NekosLifeError) if any error is encountered.
+#[doc = include_str!("../docs/return.md")]
 ///
 /// # Examples
 ///
