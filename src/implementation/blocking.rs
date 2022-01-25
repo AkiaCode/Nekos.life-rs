@@ -1,6 +1,7 @@
 use {
     super::get_with_client as async_get_with_client,
-    crate::{category::Category, error::NekosLifeError},
+    crate::{category::Category, Response},
+    reqwest::{self, Client},
 };
 
 /// Gets the image url in blocking context with the given client.
@@ -58,7 +59,7 @@ use {
 pub fn get_with_client(
     client: &reqwest::Client,
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
+) -> Response {
     tokio::runtime::Builder::new_current_thread()
         .enable_time()
         .enable_io()
@@ -101,12 +102,8 @@ pub fn get_with_client(
 /// ```
 ///
 /// [get]: crate::get
-pub fn get(
-    category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
-    let client = reqwest::Client::new();
-
-    get_with_client(&client, category)
+pub fn get(category: impl Into<Category>) -> Response {
+    get_with_client(&Client::new(), category)
 }
 
 #[cfg(test)]

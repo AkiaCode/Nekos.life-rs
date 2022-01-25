@@ -20,12 +20,20 @@ pub enum NekosLifeError {
     /// * when malformed [`BASEURL`] was given
     /// * when invlid Category was given
     UrlParseError(#[from] url::ParseError),
+
+    /// async runtime error from [`std::io::Error`]
+    ///
+    /// occurs when failed to create new tokio runtime
+    #[error("unable to create runtime")]
+    RuntimeError(#[from] std::io::Error),
 }
 
+#[cfg(test)]
 #[derive(Debug, thiserror::Error)]
 #[error("unittest error: {0}")]
 pub(crate) struct UnitTestError(String);
 
+#[cfg(test)]
 impl UnitTestError {
     pub fn new(message: &str) -> Self {
         Self(message.to_owned())

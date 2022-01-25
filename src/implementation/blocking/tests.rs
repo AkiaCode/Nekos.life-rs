@@ -1,4 +1,4 @@
-use super::*;
+use {super::*, crate::NekosLifeError};
 
 #[test]
 fn can_get_with_client_in_blocking_context(

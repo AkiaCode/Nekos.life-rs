@@ -46,7 +46,7 @@ use {
 ///     // get the url with blocking context. (no 'await')
 ///     // note that we pass the reference of the client
 ///     // as the first argument at here.
-///     let url = nekoslife::blocking_get_with_client(
+///     let url = nekoslife::get_with_client(
 ///         &client,
 ///         category,
 ///     ).await?;

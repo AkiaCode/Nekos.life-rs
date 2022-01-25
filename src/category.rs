@@ -12,8 +12,8 @@
     Ord,
     Hash,
     strum::IntoStaticStr,
+    strum::EnumIter,
 )]
-#[cfg_attr(test, derive(strum::EnumIter))]
 #[strum(serialize_all = "snake_case")]
 #[allow(missing_docs)]
 pub enum Category {

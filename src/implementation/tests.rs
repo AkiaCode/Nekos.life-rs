@@ -1,10 +1,8 @@
 use super::*;
-use {
-    crate::NekosLifeError, std::error,
-    strum::IntoEnumIterator,
-};
+use {std::error, strum::IntoEnumIterator};
 
 #[tokio::test]
+#[ignore]
 async fn all_endpoints_work() {
     let client = reqwest::Client::new();
 
