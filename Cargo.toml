@@ -21,6 +21,7 @@ nsfw = []
 blocking = ["reqwest/blocking"]
 
 [dependencies]
+const_format = "0.2.22"
 lazy_static = "1.4.0"
 reqwest = { version = "0.11", default-features = false, features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
