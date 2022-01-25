@@ -1,5 +1,7 @@
 use {
-    crate::{Category, Response, BASEURL},
+    crate::{
+        types::ApiResponseBody, Category, Response, BASEURL,
+    },
     reqwest::{self, Client},
 };
 
@@ -64,11 +66,6 @@ pub async fn get_with_client(
 ) -> Response {
     let category = category.into();
 
-    #[derive(serde::Deserialize)]
-    struct Response {
-        url: String,
-    }
-
     let resp = client
         .get(
             BASEURL
@@ -77,7 +74,7 @@ pub async fn get_with_client(
         )
         .send()
         .await?
-        .json::<Response>()
+        .json::<ApiResponseBody>()
         .await?;
 
     Ok(resp.url)
