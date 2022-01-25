@@ -1,5 +1,8 @@
 use super::*;
-use {std::error, strum::IntoEnumIterator};
+use {
+    pretty_assertions::assert_eq, std::error,
+    strum::IntoEnumIterator,
+};
 
 #[tokio::test]
 #[ignore]

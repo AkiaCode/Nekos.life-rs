@@ -54,7 +54,10 @@ lazy_static! {
 
 #[cfg(test)]
 mod test {
-    use {super::*, const_format::formatcp, std::env};
+    use {
+        super::*, const_format::formatcp,
+        pretty_assertions::assert_eq, std::env,
+    };
 
     // for test, it will force to use default base url
     fn set_to_default_baseurl() {
