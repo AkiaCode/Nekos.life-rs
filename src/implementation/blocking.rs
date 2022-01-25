@@ -1,5 +1,5 @@
 use {
-    super::get_with_client,
+    super::get_with_client as async_get_with_client,
     crate::{category::Category, error::NekosLifeError},
 };
 
@@ -55,7 +55,7 @@ use {
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
-pub fn blocking_get_with_client(
+pub fn get_with_client(
     client: &reqwest::Client,
     category: impl Into<Category>,
 ) -> Result<String, NekosLifeError> {
@@ -63,7 +63,10 @@ pub fn blocking_get_with_client(
         .enable_time()
         .enable_io()
         .build()?
-        .block_on(get_with_client(&client, category.into()))
+        .block_on(async_get_with_client(
+            &client,
+            category.into(),
+        ))
 }
 
 /// Gets the image url in blocking context.
@@ -98,10 +101,10 @@ pub fn blocking_get_with_client(
 /// ```
 ///
 /// [get]: crate::get
-pub fn blocking_get(
+pub fn get(
     category: impl Into<Category>,
 ) -> Result<String, NekosLifeError> {
     let client = reqwest::Client::new();
 
-    blocking_get_with_client(&client, category)
+    get_with_client(&client, category)
 }
