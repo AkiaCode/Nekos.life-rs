@@ -64,15 +64,11 @@ mod tests {
         let client = reqwest::Client::new();
 
         for variant in Category::iter() {
+            #[rustfmt::skip]
             get_with_client(&client, variant)
                 .await
-                .unwrap_or_else(|_| {
-                    panic!(
-                        "{} does not work",
-                        variant.to_url_path()
-                    )
-                });
-            println!("{}: works", variant.to_url_path());
+                .unwrap_or_else(|_| panic!("{variant} does not work"));
+            println!("{variant}: works");
         }
     }
 
@@ -89,7 +85,7 @@ mod tests {
 
         assert_eq!(
             Category::iter()
-                .map(|c| c.to_url_path())
+                .map(Into::<&'static str>::into)
                 .chain(["v3", "nekoapi_v3.1"])
                 .collect::<HashSet<_>>(),
             Regex::new(r"'(?P<ct>[\w\.]+)'")
