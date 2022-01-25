@@ -1,3 +1,5 @@
+//! represents the image categories
+
 #![allow(deprecated)]
 
 use crate::{types, IntoUrl, BASEURL};

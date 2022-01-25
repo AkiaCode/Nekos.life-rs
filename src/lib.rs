@@ -3,18 +3,17 @@
  */
 #![deny(missing_docs)]
 
-mod category;
+mod implementation;
 mod r#static;
 mod types;
-
-mod implementation;
 
 use r#static::BASEURL;
 
 pub use {
-    category::Category,
     implementation::{
-        get, get_with_client, types::IntoUrl,
+        category::{self, Category},
+        get, get_with_client,
+        types::IntoUrl,
     },
     types::{NekosLifeError, Response, Result, UrlString},
 };

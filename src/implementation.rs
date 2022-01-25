@@ -120,6 +120,7 @@ where
     get_with_client(&Client::new(), endpoint).await
 }
 
+pub mod category;
 pub mod types;
 
 #[cfg(test)]
