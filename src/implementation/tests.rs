@@ -1,5 +1,8 @@
 use super::*;
-use {std::error, strum::IntoEnumIterator};
+use {
+    crate::NekosLifeError, std::error,
+    strum::IntoEnumIterator,
+};
 
 #[tokio::test]
 async fn all_endpoints_work() {
@@ -22,8 +25,8 @@ async fn all_endpoints_work() {
 async fn no_new_endpoints(
 ) -> Result<(), Box<dyn error::Error>> {
     use {
-        regex::Regex, std::collections::HashSet,
-        strum::IntoEnumIterator,
+        crate::types::UnitTestError, regex::Regex,
+        std::collections::HashSet, strum::IntoEnumIterator,
     };
 
     let regex_img = Regex::new(
@@ -48,11 +51,11 @@ async fn no_new_endpoints(
                     .find_map(
                         |line| regex_img.captures(line)
                     )
-                    .ok_or(NekosLifeError::new_unittest_error(
+                    .ok_or(UnitTestError::new(
                         "couldn't find endpoints line"
                     ))?
                     .name("eps")
-                    .ok_or(NekosLifeError::new_unittest_error(
+                    .ok_or(UnitTestError::new(
                         "couldn't find eps from capture"
                     ))?
                     .as_str()

@@ -4,8 +4,8 @@
 #![deny(missing_docs)]
 
 mod category;
-mod error;
 mod r#static;
+mod types;
 
 mod implementation;
 
@@ -13,8 +13,8 @@ use r#static::BASEURL;
 
 pub use {
     category::Category,
-    error::NekosLifeError,
     implementation::{get, get_with_client},
+    types::{NekosLifeError, Response, Result, UrlString},
 };
 
 #[cfg(feature = "blocking")]

@@ -1,4 +1,7 @@
-use crate::{Category, NekosLifeError, BASEURL};
+use {
+    crate::{Category, Response, BASEURL},
+    reqwest::{self, Client},
+};
 
 /// Gets the image url with the given client.
 ///
@@ -58,7 +61,7 @@ use crate::{Category, NekosLifeError, BASEURL};
 pub async fn get_with_client(
     client: &reqwest::Client,
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
+) -> Response {
     let category = category.into();
 
     #[derive(serde::Deserialize)]
@@ -120,8 +123,8 @@ pub async fn get_with_client(
 /// [get_with_client]: crate::get_with_client
 pub async fn get(
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
-    let client = reqwest::Client::new();
+) -> Response {
+    let client = Client::new();
 
     get_with_client(&client, category).await
 }

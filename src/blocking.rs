@@ -58,7 +58,7 @@ use crate::{
 pub fn blocking_get_with_client(
     client: &reqwest::Client,
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
+) -> Response {
     tokio::runtime::Builder::new_current_thread()
         .enable_time()
         .enable_io()
@@ -100,7 +100,7 @@ pub fn blocking_get_with_client(
 /// [get]: crate::get
 pub fn blocking_get(
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
+) -> Response {
     let client = reqwest::Client::new();
 
     blocking_get_with_client(&client, category)
