@@ -13,23 +13,23 @@ use {
 /// this function returns [Future](std::future::Future) which must be awaited.
 /// so you have to run this in an async context.
 /// if you don't care about performance or only need blocking API,
-/// check the [`blocking_get`](create::blocking_get) function out, which is blocking version of this.
+/// check the [`blocking::get`](blocking::get) function out, which is blocking version of this.
 ///
 /// ## Reusability
 ///
 /// this function takes a [client](reqwest::Client) as an argument,
 /// so if you have to make countless number of requests.\
 /// it is good idea to reuse the same client for each request,
-/// by using this function instead of [`blocking_get`].
+/// by using this function instead of [`blocking::get`].
 ///
 /// most cases, however, will not need to call this directly.
-/// if you find some simplest way, consider using [`blocking_get`](blocking_get) instead.
+/// if you find some simplest way, consider using [`blocking::get`](blocking::get) instead.
 ///
 /// # Returns
 ///
 /// On success, the [`Ok(String)`](String) which contains the `URL` of the image or GIF
 /// found by using the given endpoint from the `API` returns.\
-/// Otherwise, it will return the [`Err(NekosLifeError)`](NekosLifeError) if any error is encountered.
+/// Otherwise, it will return the [`Err(NekosLifeError)`](crate::NekosLifeError) if any error is encountered.
 ///
 /// # Examples
 ///
@@ -84,7 +84,7 @@ where
 /// this function returns [Future](std::future::Future) which must be awaited.
 /// so you have to run this in an async context.
 /// if you don't care about performance or only need blocking API,
-/// check the [`blocking_get`](create::blocking_get) function out, which is blocking version of this.
+/// check the [`blocking::get`](self::blocking::get) function out, which is blocking version of this.
 ///
 /// ## Reusability
 ///
@@ -97,7 +97,7 @@ where
 ///
 /// On success, the [`Ok(String)`](String) which contains the `URL` of the image or GIF
 /// found by using the given endpoint from the `API` returns.\
-/// Otherwise, it will return the [`Err(NekosLifeError)`](NekosLifeError) if any error is encountered.
+/// Otherwise, it will return the [`Err(NekosLifeError)`](crate::NekosLifeError) if any error is encountered.
 ///
 /// # Examples
 ///

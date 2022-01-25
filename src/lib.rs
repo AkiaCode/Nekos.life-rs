@@ -9,13 +9,12 @@ mod types;
 
 mod implementation;
 
-use r#static::BASEURL;
-
 pub use {
     category::Category,
     implementation::{
         get, get_with_client, types::IntoUrl,
     },
+    r#static::BASEURL,
     types::{NekosLifeError, Response, Result, UrlString},
 };
 

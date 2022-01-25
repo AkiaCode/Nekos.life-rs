@@ -22,16 +22,16 @@ use {
 /// this function takes a [client](reqwest::Client) as an argument,
 /// so if you have to make countless number of requests.\
 /// it is good idea to reuse the same client for each request,
-/// by using this function instead of [`blocking_get`].
+/// by using this function instead of [`blocking::get`](get).
 ///
 /// most cases, however, will not need to call this directly.
-/// if you find some simplest way, consider using [`blocking_get`](blocking_get) instead.
+/// if you find some simplest way, consider using [`blocking::get`](get) instead.
 ///
 /// # Returns
 ///
 /// On success, the [`Ok(String)`](String) which contains the `URL` of the image or GIF
 /// found by using the given endpoint from the `API` returns.\
-/// Otherwise, it will return the [`Err(NekosLifeError)`](NekosLifeError) if any error is encountered.
+/// Otherwise, it will return the [`Err(NekosLifeError)`](crate::NekosLifeError) if any error is encountered.
 ///
 /// # Examples
 ///
@@ -88,14 +88,14 @@ where
 /// also this function will make new [client](reqwest::Client)
 /// struct with default settings every time it is called.\
 /// if you have to reuse the client or set your client carefully,
-/// consider using the [`blocking_get_with_client`] function instead.
+/// consider using the [`blocking::get_with_client`](get_with_client) function instead.
 ///
 ///
 /// # Returns
 ///
 /// On success, the [`Ok(String)`](String) which contains the `URL` of the image or GIF
 /// found by using the given endpoint from the `API` returns.\
-/// Otherwise, it will return the [`Err(NekosLifeError)`](NekosLifeError) if any error is encountered.
+/// Otherwise, it will return the [`Err(NekosLifeError)`](crate::NekosLifeError) if any error is encountered.
 ///
 /// # Examples
 ///

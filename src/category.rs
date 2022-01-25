@@ -113,7 +113,7 @@ pub enum Category {
 }
 
 impl Category {
-    /// Gets the path to append after [`BASEURL`]+/img/ to make a request to get an image / gif url.
+    /// Gets the path to append after [`struct@BASEURL`]+/img/ to make a request to get an image / gif url.
     /// # Examples
     /// ```rust
     /// # use nekoslife::{Category};
