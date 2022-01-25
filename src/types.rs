@@ -59,13 +59,6 @@ pub type Result<T> = std::result::Result<T, NekosLifeError>;
 /// which is arbitrary and hard to understand exactly what it means.
 pub type UrlString = String;
 
-// represents the response body
-// for serde deserialization
-#[derive(serde::Deserialize)]
-pub(crate) struct ApiResponseBody {
-    pub(crate) url: UrlString,
-}
-
 /// The return type of the [`get`](crate::get) or other functions.
 ///
 /// This type allows you to wire single type (without generics) for the return / result types

@@ -1,8 +1,7 @@
 use {
-    crate::{
-        types::ApiResponseBody, Category, Response, BASEURL,
-    },
+    crate::{Category, Response, BASEURL},
     reqwest::{self, Client},
+    types::ApiResponseBody,
 };
 
 /// Gets the image url with the given client.
@@ -125,6 +124,8 @@ pub async fn get(
 
     get_with_client(&client, category).await
 }
+
+mod types;
 
 #[cfg(test)]
 mod tests;
