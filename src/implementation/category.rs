@@ -18,8 +18,12 @@ use crate::{types, IntoUrl, BASEURL};
     strum::IntoStaticStr,
     strum::EnumIter,
     strum::Display,
+    strum::EnumString,
 )]
-#[strum(serialize_all = "snake_case")]
+#[strum(
+    serialize_all = "snake_case",
+    ascii_case_insensitive
+)]
 #[allow(missing_docs)]
 pub enum Category {
     Tickle,
