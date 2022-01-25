@@ -1,4 +1,7 @@
-use crate::{r#static::BASEURL, Category, NekosLifeError};
+use {
+    crate::{r#static::BASEURL, Category, Response},
+    reqwest::{self, Client},
+};
 
 // use super::*;
 
@@ -15,7 +18,7 @@ use crate::{r#static::BASEURL, Category, NekosLifeError};
 pub async fn get_with_client(
     client: &reqwest::Client,
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
+) -> Response {
     let category = category.into();
 
     #[derive(serde::Deserialize)]
@@ -48,8 +51,8 @@ pub async fn get_with_client(
 /// # }
 pub async fn get(
     category: impl Into<Category>,
-) -> Result<String, NekosLifeError> {
-    let client = reqwest::Client::new();
+) -> Response {
+    let client = Client::new();
 
     get_with_client(&client, category).await
 }
@@ -61,7 +64,7 @@ mod tests {
 
     #[tokio::test]
     async fn all_endpoints_work() {
-        let client = reqwest::Client::new();
+        let client = Client::new();
 
         for variant in Category::iter() {
             get_with_client(&client, variant)
@@ -95,7 +98,7 @@ mod tests {
             Regex::new(r"'(?P<ct>[\w\.]+)'")
                 .expect("failed to init regex")
                 .captures_iter(
-                    reqwest::Client::new()
+                    Client::new()
                         .get(
                             BASEURL.join("endpoints").expect(
                                 "an error occurred while joining the url"

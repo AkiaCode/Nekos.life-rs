@@ -4,8 +4,8 @@
 #![deny(missing_docs)]
 
 mod category;
-mod error;
 mod r#static;
+mod types;
 
 #[cfg(not(feature = "blocking"))]
 mod implementation;
@@ -16,6 +16,6 @@ mod implementation;
 
 pub use {
     category::Category,
-    error::NekosLifeError,
     implementation::{get, get_with_client},
+    types::{NekosLifeError, Response, Result, UrlString},
 };
