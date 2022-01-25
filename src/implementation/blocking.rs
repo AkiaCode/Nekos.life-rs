@@ -108,3 +108,6 @@ pub fn get(
 
     get_with_client(&client, category)
 }
+
+#[cfg(test)]
+mod tests;

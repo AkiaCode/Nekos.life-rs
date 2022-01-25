@@ -12,4 +12,19 @@ pub enum NekosLifeError {
     /// occurs when failed to create new tokio runtime
     #[error("unable to create runtime")]
     RuntimeError(#[from] std::io::Error),
+
+    #[cfg(test)]
+    #[error(
+        "error occurred while unit testing: {message}"
+    )]
+    TestError { message: String },
+}
+
+#[cfg(test)]
+impl NekosLifeError {
+    pub fn new_unittest_error(msg: &str) -> Self {
+        Self::TestError {
+            message: msg.to_string(),
+        }
+    }
 }
