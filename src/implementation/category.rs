@@ -114,19 +114,6 @@ pub enum Category {
     SmallBoobs,
 }
 
-impl Category {
-    /// Gets the path to append after [`BASEURL`]+/img/ to make a request to get an image / gif url.
-    /// # Examples
-    /// ```rust
-    /// # use nekoslife::{Category};
-    /// assert_eq!(Category::from(Category::Waifu).to_url_path(), "waifu");
-    /// ```
-    #[deprecated]
-    pub fn to_url_path(self) -> &'static str {
-        self.into()
-    }
-}
-
 impl IntoUrl for Category {
     fn into_url(self) -> types::Result<url::Url> {
         Ok(BASEURL.join("img/")?.join(self.into())?)
