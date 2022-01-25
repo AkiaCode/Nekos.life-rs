@@ -28,6 +28,9 @@ pub enum Category {
     Sfw(SfwCategory),
 }
 
+#[cfg(doctest)]
+use pretty_assertions::assert_eq;
+
 impl Category {
     /// Gets the path to append after [`BASEURL`]+/img/ to make a request to get an image / gif url.
     /// # Examples
