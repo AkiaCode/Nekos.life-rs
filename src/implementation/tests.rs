@@ -1,10 +1,15 @@
 use {
     super::*,
-    crate::{Category, BASEURL},
+    crate::{Category, NekosLifeError, BASEURL},
+    lazy_regex::{lazy_regex, Lazy, Regex},
     pretty_assertions::assert_eq,
     std::error,
     strum::IntoEnumIterator,
 };
+
+static RESULT_URL: Lazy<Regex> = lazy_regex!(
+    r"^https?://cdn\.nekos\.life/(?P<ep>[\w_\.]+)/[\w_\.]+$"
+);
 
 #[tokio::test]
 #[ignore]
@@ -21,6 +26,7 @@ async fn all_endpoints_work() {
 }
 
 #[tokio::test]
+#[ignore]
 async fn no_new_endpoints(
 ) -> Result<(), Box<dyn error::Error>> {
     use {
@@ -37,8 +43,7 @@ async fn no_new_endpoints(
             .map(Into::<&'static str>::into)
             .chain(["v3", "nekoapi_v3.1"])
             .collect::<HashSet<_>>(),
-        Regex::new(r"'(?P<ct>[\w\.]+)'")
-            .expect("failed to init regex")
+        Regex::new(r"'(?P<ct>[\w\.]+)'")?
             .captures_iter(
                 Client::new()
                     .get(BASEURL.join("endpoints")?)
@@ -65,4 +70,21 @@ async fn no_new_endpoints(
                 .as_str())
             .collect::<HashSet<_>>()
     ))
+}
+
+#[tokio::test]
+async fn get_with_client_test() -> Result<(), NekosLifeError>
+{
+    Ok(assert!(RESULT_URL.is_match(
+        &get_with_client(&Client::new(), Category::Neko)
+            .await?
+    )))
+}
+
+#[tokio::test]
+async fn get_with_client_and_string_test(
+) -> Result<(), NekosLifeError> {
+    Ok(assert!(RESULT_URL.is_match(
+        &get_with_client(&Client::new(), "Neko").await?
+    )))
 }
