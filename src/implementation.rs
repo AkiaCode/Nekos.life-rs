@@ -81,7 +81,7 @@ pub async fn get_with_client(
 }
 
 /// Gets the image url
-/// 
+///
 /// # Note
 ///
 /// ## Context
@@ -110,7 +110,7 @@ pub async fn get_with_client(
 /// # tokio::runtime::Runtime::new().unwrap().block_on(async {
 /// // get the url from 'Waifu' category
 /// let url = nekoslife::get(nekoslife::Category::Waifu).await?;
-/// 
+///
 /// // then print the url.
 /// println!("{url}");
 /// # Ok::<(), nekoslife::NekosLifeError>(())
@@ -194,3 +194,7 @@ mod tests {
         );
     }
 }
+
+/// blocking version of implementation
+#[cfg(feature = "blocking")]
+pub mod blocking;

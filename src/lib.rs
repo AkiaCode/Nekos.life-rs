@@ -9,9 +9,6 @@ mod r#static;
 
 mod implementation;
 
-#[cfg(feature = "blocking")]
-mod blocking;
-
 pub use {
     category::Category,
     error::NekosLifeError,
@@ -19,6 +16,6 @@ pub use {
 };
 
 #[cfg(feature = "blocking")]
-pub use blocking::{
+pub use implementation::blocking::{
     blocking_get, blocking_get_with_client,
 };
