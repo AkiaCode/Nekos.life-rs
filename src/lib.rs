@@ -3,10 +3,13 @@
  */
 #![deny(missing_docs)]
 
+#[macro_use]
+mod r#macro;
 mod implementation;
 mod r#static;
 mod types;
 
+#[allow(dead_code)]
 use r#static::BASEURL;
 
 pub use {

@@ -2,7 +2,7 @@
 
 #![allow(deprecated)]
 
-use crate::{types, IntoUrl, BASEURL};
+use crate::{types, IntoUrl};
 
 /// A category of images.
 // On new variants, update the all_nsfw_endpoints_work and no_new_images tests
@@ -120,7 +120,7 @@ pub enum Category {
 
 impl IntoUrl for Category {
     fn into_url(self) -> types::Result<url::Url> {
-        Ok(BASEURL.join("img/")?.join(self.into())?)
+        Ok(string_to_endpoint!(self.into()))
     }
 }
 
