@@ -68,6 +68,8 @@ impl IntoUrl for &'static str {
 
 #[cfg(test)]
 mod tests {
+    // use pretty_assertions::assert_eq;
+
     use {
         crate::{NekosLifeError, BASEURL},
         pretty_assertions::assert_eq,
@@ -84,5 +86,19 @@ mod tests {
                 baseurl = BASEURL.as_str()
             )
         ))
+    }
+
+    #[tokio::test]
+    async fn parse_test() -> Result<(), NekosLifeError> {
+        Ok(assert!(lazy_regex::regex_is_match!(
+            r"^https://cdn\.nekos\.life/neko/[\w_.]+$",
+            &<&str as super::IntoUrl>::parse(
+                reqwest::get(
+                    BASEURL.join("img/")?.join("neko")?
+                )
+                .await?
+            )
+            .await?
+        )))
     }
 }
