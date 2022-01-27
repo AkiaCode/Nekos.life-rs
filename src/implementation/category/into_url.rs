@@ -13,13 +13,7 @@ pub(crate) struct ApiResponseBody {
 impl IntoUrl for Category {
     type Response = types::UrlString;
 
-    type Fut = std::pin::Pin<
-        Box<
-            dyn std::future::Future<
-                Output = types::Result<Self::Response>,
-            >,
-        >,
-    >;
+    type Fut = into_url_fut! {};
 
     fn into_url(self) -> crate::types::Result<url::Url> {
         Ok(string_to_endpoint!(self.into()))
@@ -27,19 +21,14 @@ impl IntoUrl for Category {
 
     parse_json! {
         ApiResponseBody,
-        url
+        url,
     }
 }
 
 impl IntoUrl for &'static str {
     type Response = crate::types::UrlString;
-    type Fut = std::pin::Pin<
-        Box<
-            dyn std::future::Future<
-                Output = types::Result<Self::Response>,
-            >,
-        >,
-    >;
+
+    type Fut = into_url_fut! {};
 
     fn into_url(self) -> types::Result<url::Url> {
         Ok(string_to_endpoint!(
@@ -59,7 +48,7 @@ impl IntoUrl for &'static str {
 
     parse_json! {
         ApiResponseBody,
-        url
+        url,
     }
 }
 
