@@ -118,27 +118,7 @@ pub enum Category {
     SmallBoobs,
 }
 
-impl IntoUrl for Category {
-    type Response = crate::types::UrlString;
-
-    type Fut = std::pin::Pin<
-        Box<
-            dyn std::future::Future<
-                Output = types::Result<Self::Response>,
-            >,
-        >,
-    >;
-
-    fn into_url(self) -> types::Result<url::Url> {
-        Ok(string_to_endpoint!(self.into()))
-    }
-
-    fn parse(res: reqwest::Response) -> Self::Fut {
-        Box::pin(async move {
-            Ok(res.json::<super::types::ApiResponseBody>().await?.url)
-        })
-    }
-}
+mod into_url;
 
 #[cfg(test)]
 mod tests;
