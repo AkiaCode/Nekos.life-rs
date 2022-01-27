@@ -62,17 +62,21 @@ use {
 pub async fn get_with_client<T>(
     client: &reqwest::Client,
     endpoint: T,
-) -> Response
+) -> crate::types::Result<<T as IntoUrl>::Response>
 where
     T: IntoUrl,
 {
-    Ok(client
-        .get(endpoint.into_url()?)
-        .send()
-        .await?
-        .json::<ApiResponseBody>()
-        .await?
-        .url)
+    Ok(<T as IntoUrl>::parse(
+        client
+            .get(
+                <T as IntoUrl>::into_url(endpoint)?
+                    .to_string()
+                    .as_str(),
+            )
+            .send()
+            .await?,
+    )
+    .await?)
 }
 
 /// Gets the image url
@@ -113,7 +117,7 @@ where
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
-pub async fn get<T>(endpoint: T) -> Response
+pub async fn get<T>(endpoint: T) -> crate::types::Result<<T as IntoUrl>::Response>
 where
     T: IntoUrl,
 {

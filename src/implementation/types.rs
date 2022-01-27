@@ -18,23 +18,51 @@ pub(crate) struct ApiResponseBody {
 /// since Rust does not allow to derive foreign traits to foreign types,\
 /// such as implementing [`TryInto<url::Url>`] for [`&str`].
 pub trait IntoUrl {
+    /// Response type
+    type Response;
+
+    /// Future type for async method
+    type Fut: std::future::Future<
+        Output = types::Result<Self::Response>,
+    >;
+
     /// consumes itself and returns a [`Result`](crate::types::Result) of [`UrlString`].
     fn into_url(self) -> types::Result<url::Url>;
+
+    /// parse the body of the response
+    fn parse(res: reqwest::Response) -> Self::Fut;
 }
 
 impl IntoUrl for &'static str {
+    type Response = crate::types::UrlString;
+    type Fut = std::pin::Pin<
+        Box<
+            dyn std::future::Future<
+                Output = types::Result<Self::Response>,
+            >,
+        >,
+    >;
+
     fn into_url(self) -> types::Result<url::Url> {
-        Ok(string_to_endpoint!(Into::<&'static str>::into(
-            &<Category as std::str::FromStr>::from_str(
-                self
+        Ok(string_to_endpoint!(
+            Into::<&'static str>::into(
+                &<Category as std::str::FromStr>::from_str(
+                    self
+                )
+                .map_err(|error| {
+                    NekosLifeError::UnknownEndpoint {
+                        error,
+                        url: self.to_owned(),
+                    }
+                })?
             )
-            .map_err(|error| {
-                NekosLifeError::UnknownEndpoint {
-                    error,
-                    url: self.to_owned(),
-                }
-            })?
-        )))
+        ))
+    }
+
+    fn parse(res: reqwest::Response) -> Self::Fut {
+        Box::pin(async move {
+            Ok(res.json::<ApiResponseBody>().await?.url)
+        })
     }
 }
 
