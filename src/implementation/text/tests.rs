@@ -50,10 +50,8 @@ async fn owoify_with_exactly_200_chars(
 }
 
 #[tokio::test]
-#[should_panic]
 async fn owoify_with_more_than_200_chars() {
     assert!(get(OwOify(concatcp! {
-
        EXACTLY_200_CHARS,
        "a"
     }))
@@ -62,13 +60,8 @@ async fn owoify_with_more_than_200_chars() {
 }
 
 #[tokio::test]
-#[should_panic]
 async fn owoify_with_0_chars() {
-    assert!(
-        get_with_client(&Client::new(), OwOify(""))
-            .await
-            .is_err()
-    );
+    assert!(get(OwOify("")).await.is_err());
 }
 
 #[tokio::test]
@@ -107,7 +100,6 @@ async fn spoiler_with_exactly_200_chars(
 }
 
 #[tokio::test]
-#[should_panic]
 async fn spoiler_with_more_than_200_chars() {
     assert!(get(Spoiler(concatcp! {
         EXACTLY_1000_CHARS,
@@ -118,7 +110,6 @@ async fn spoiler_with_more_than_200_chars() {
 }
 
 #[tokio::test]
-#[should_panic]
 async fn spoiler_with_0_chars() {
     assert!(get(Spoiler("")).await.is_err());
 }

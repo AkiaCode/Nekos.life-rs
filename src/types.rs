@@ -38,6 +38,19 @@ pub enum NekosLifeError {
         /// strum parse error
         error: strum::ParseError,
     },
+
+    ///
+    #[error(
+        "{endpoint_name} text must be between {start} and {end} characters",
+        start = range.start(),
+        end = range.end(),
+    )]
+    OutOfRangeError {
+        ///
+        endpoint_name: String,
+        ///
+        range: std::ops::RangeInclusive<usize>,
+    },
 }
 
 #[cfg(test)]

@@ -1,3 +1,5 @@
+use crate::NekosLifeError;
+
 use {crate::r#static::BASEURL, serde::Deserialize};
 
 // struct Cat;
@@ -22,7 +24,15 @@ use {crate::r#static::BASEURL, serde::Deserialize};
 //     }
 // }
 
-make_text_endpoints!(Cat);
+make_text_endpoints! {
+    #[derive(Debug)]
+    Cat
+}
+
+make_text_endpoints! {
+    Dog @ 'a |> str := owo <| ~~> owoify
+}
+// ~~> ddddog
 
 // #[meta]
 // Cat
@@ -44,16 +54,20 @@ impl<'a> super::types::IntoUrl for OwOify<'a> {
         Ok({
             let mut url = BASEURL.join("owoify")?;
 
-            url.query_pairs_mut()
-                .append_pair(
-                    "text", 
-                    if matches! {
-                        self.0.len(),
-                        1..=200
-                    } { self.0 } else {
-                        panic!("OwOify text must be between 1 and 200 characters")
-                    }
-                );
+            url.query_pairs_mut().append_pair(
+                "text",
+                if matches! {
+                    self.0.len(),
+                    1..=200
+                } {
+                    self.0
+                } else {
+                    Err(NekosLifeError::OutOfRangeError {
+                        endpoint_name: "OwOify".to_owned(),
+                        range: 1..=200,
+                    })?
+                },
+            );
             url
         })
     }
@@ -124,16 +138,20 @@ impl<'a> super::types::IntoUrl for Spoiler<'a> {
         Ok({
             let mut url = BASEURL.join("spoiler")?;
 
-            url.query_pairs_mut()
-                .append_pair(
-                    "text", 
-                    if matches! {
-                        self.0.len(),
-                        1..=1000
-                    } { self.0 } else {
-                        panic!("Spoilery text must be between 1 and 200 characters")
-                    }
-                );
+            url.query_pairs_mut().append_pair(
+                "text",
+                if matches! {
+                    self.0.len(),
+                    1..=1000
+                } {
+                    self.0
+                } else {
+                    Err(NekosLifeError::OutOfRangeError {
+                        endpoint_name: "OwOify".to_owned(),
+                        range: 1..=200,
+                    })?
+                },
+            );
             url
         })
     }
