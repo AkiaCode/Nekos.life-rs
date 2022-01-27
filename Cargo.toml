@@ -23,6 +23,7 @@ blocking = ["reqwest/blocking"]
 [dependencies]
 const_format = "0.2.22"
 lazy_static = "1.4.0"
+paste = "1.0.6"
 reqwest = { version = "0.11", default-features = false, features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 strum = { version = "0.23.0", features = ["derive"] }
