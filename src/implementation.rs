@@ -127,6 +127,7 @@ where
 }
 
 pub mod category;
+pub mod text;
 pub mod types;
 
 #[cfg(test)]
