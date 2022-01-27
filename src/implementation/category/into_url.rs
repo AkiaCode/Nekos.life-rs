@@ -3,6 +3,13 @@ use {
     crate::types,
 };
 
+// represents the response body
+// for serde deserialization
+#[derive(serde::Deserialize, Debug)]
+pub(crate) struct ApiResponseBody {
+    pub(crate) url: types::UrlString,
+}
+
 impl IntoUrl for Category {
     type Response = types::UrlString;
 
@@ -18,18 +25,10 @@ impl IntoUrl for Category {
         Ok(string_to_endpoint!(self.into()))
     }
 
-    fn parse(res: reqwest::Response) -> Self::Fut {
-        Box::pin(async move {
-            Ok(res.json::<ApiResponseBody>().await?.url)
-        })
+    parse_json! {
+        ApiResponseBody,
+        url
     }
-}
-
-// represents the response body
-// for serde deserialization
-#[derive(serde::Deserialize, Debug)]
-pub(crate) struct ApiResponseBody {
-    pub(crate) url: types::UrlString,
 }
 
 impl IntoUrl for &'static str {
@@ -58,10 +57,9 @@ impl IntoUrl for &'static str {
         ))
     }
 
-    fn parse(res: reqwest::Response) -> Self::Fut {
-        Box::pin(async move {
-            Ok(res.json::<ApiResponseBody>().await?.url)
-        })
+    parse_json! {
+        ApiResponseBody,
+        url
     }
 }
 
