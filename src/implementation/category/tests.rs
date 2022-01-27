@@ -56,8 +56,9 @@ fn returns_error_when_invalid_category_has_been_given(
     Ok(assert!(["Abiria", "is", "cute"]
         .into_iter()
         .map(<Category as str::FromStr>::from_str)
-        .all(|e| e
-            .eq(&Err(strum::ParseError::VariantNotFound)))))
+        .all(|e| e.eq(&Err(
+            strum::ParseError::VariantNotFound
+        )))))
 }
 
 #[test]
