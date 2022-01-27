@@ -1,26 +1,32 @@
 use {crate::r#static::BASEURL, serde::Deserialize};
 
-struct Cat;
+// struct Cat;
 
-#[derive(Deserialize)]
-pub struct CatModel {
-    cat: crate::UrlString,
-}
+// #[derive(Deserialize)]
+// pub struct CatModel {
+//     cat: crate::UrlString,
+// }
 
-impl super::types::IntoUrl for Cat {
-    type Response = crate::types::UrlString;
+// impl super::types::IntoUrl for Cat {
+//     type Response = crate::types::UrlString;
 
-    type Fut = into_url_fut! {};
+//     type Fut = into_url_fut! {};
 
-    fn into_url(self) -> crate::types::Result<url::Url> {
-        Ok(BASEURL.join("cat")?)
-    }
+//     fn into_url(self) -> crate::types::Result<url::Url> {
+//         Ok(BASEURL.join("cat")?)
+//     }
 
-    parse_json! {
-        CatModel,
-        cat,
-    }
-}
+//     parse_json! {
+//         CatModel,
+//         cat,
+//     }
+// }
+
+make_text_endpoints!(Cat);
+
+// #[meta]
+// Cat
+// OwOify @ 'a |> pub &'a str := owo <| ~~> cat #! 1..=200
 
 struct OwOify<'a>(pub &'a str);
 

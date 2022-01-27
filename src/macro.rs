@@ -51,3 +51,60 @@ macro_rules! into_url_fut {
         >
     };
 }
+
+macro_rules! make_text_endpoints {
+    (
+        $ endpoint :ident
+    ) => {
+        use paste::paste;
+
+        pub struct $endpoint;
+
+        paste! {
+            #[derive(Deserialize)]
+            pub struct [<
+                $endpoint
+                Model
+            >] {
+                [<
+                    $endpoint :lower
+                >]: crate::UrlString,
+            }
+        }
+
+        impl super::types::IntoUrl for $endpoint {
+            type Response = crate::types::UrlString;
+
+            type Fut = into_url_fut! {};
+
+            fn into_url(
+                self,
+            ) -> crate::types::Result<url::Url> {
+                paste! {
+                    Ok(
+                        crate::r#static::BASEURL
+                            .join(
+                                stringify!(
+                                    [<
+                                        $endpoint :lower
+                                    >]
+                                )
+                            )?
+                    )
+                }
+            }
+
+            paste! {
+                parse_json! {
+                    [<
+                        $endpoint
+                        Model
+                    >],
+                    [<
+                        $endpoint :lower
+                    >],
+                }
+            }
+        }
+    };
+}
