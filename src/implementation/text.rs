@@ -30,7 +30,7 @@ make_text_endpoints! {
 }
 
 make_text_endpoints! {
-    Dog @ 'a |> str := owo <| ~~> owoify
+    OwOify @ 'a |> str := owo <| ~~> owoify !# 1..=200
 }
 // ~~> ddddog
 
@@ -38,45 +38,45 @@ make_text_endpoints! {
 // Cat
 // OwOify @ 'a |> pub &'a str := owo <| ~~> cat #! 1..=200
 
-struct OwOify<'a>(pub &'a str);
+// struct OwOify<'a>(pub &'a str);
 
-#[derive(Deserialize)]
-pub struct OwOifyModel {
-    owo: crate::UrlString,
-}
+// #[derive(Deserialize)]
+// pub struct OwOifyModel {
+//     owo: crate::UrlString,
+// }
 
-impl<'a> super::types::IntoUrl for OwOify<'a> {
-    type Response = crate::types::UrlString;
+// impl<'a> super::types::IntoUrl for OwOify<'a> {
+//     type Response = crate::types::UrlString;
 
-    type Fut = into_url_fut! {};
+//     type Fut = into_url_fut! {};
 
-    fn into_url(self) -> crate::types::Result<url::Url> {
-        Ok({
-            let mut url = BASEURL.join("owoify")?;
+//     fn into_url(self) -> crate::types::Result<url::Url> {
+//         Ok({
+//             let mut url = BASEURL.join("owoify")?;
 
-            url.query_pairs_mut().append_pair(
-                "text",
-                if matches! {
-                    self.0.len(),
-                    1..=200
-                } {
-                    self.0
-                } else {
-                    Err(NekosLifeError::OutOfRangeError {
-                        endpoint_name: "OwOify".to_owned(),
-                        range: 1..=200,
-                    })?
-                },
-            );
-            url
-        })
-    }
+//             url.query_pairs_mut().append_pair(
+//                 "text",
+//                 if matches! {
+//                     self.0.len(),
+//                     1..=200
+//                 } {
+//                     self.0
+//                 } else {
+//                     Err(NekosLifeError::OutOfRangeError {
+//                         endpoint_name: "OwOify".to_owned(),
+//                         range: 1..=200,
+//                     })?
+//                 },
+//             );
+//             url
+//         })
+//     }
 
-    parse_json! {
-        OwOifyModel,
-        owo
-    }
-}
+//     parse_json! {
+//         OwOifyModel,
+//         owo
+//     }
+// }
 
 struct Why;
 
