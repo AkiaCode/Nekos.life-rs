@@ -2,8 +2,6 @@
 
 #![allow(deprecated)]
 
-use crate::{types, IntoUrl};
-
 /// A category of images.
 // On new variants, update the all_nsfw_endpoints_work and no_new_images tests
 #[derive(

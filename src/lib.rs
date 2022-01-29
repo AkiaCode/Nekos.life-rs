@@ -9,7 +9,7 @@ mod implementation;
 mod r#static;
 mod types;
 
-#[allow(dead_code)]
+#[allow(unused_imports)]
 use r#static::BASEURL;
 
 pub use {

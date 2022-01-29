@@ -1,9 +1,6 @@
 //! important types to interact with the API.
 
-use crate::{
-    types::{self, UrlString},
-    Category, NekosLifeError,
-};
+use crate::types::{self};
 
 /// a trait that must be implemented to be passed by the [`get`] function.
 ///

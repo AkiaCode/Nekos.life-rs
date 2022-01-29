@@ -1,5 +1,5 @@
 use {
-    crate::{IntoUrl, Response},
+    crate::IntoUrl,
     reqwest::{self, Client},
     // ::ApiResponseBody,
 };

@@ -3,7 +3,6 @@ use {
         get_with_client as async_get_with_client,
         types::IntoUrl,
     },
-    crate::Response,
     reqwest::{self, Client},
 };
 
@@ -62,7 +61,7 @@ use {
 pub fn get_with_client<T>(
     client: &reqwest::Client,
     endpoint: T,
-) -> <T as IntoUrl>::Response
+) -> crate::types::Result<<T as IntoUrl>::Response>
 where
     T: IntoUrl,
 {
@@ -105,7 +104,9 @@ where
 /// ```
 ///
 /// [get]: crate::get
-pub fn get<T>(endpoint: T) -> Response
+pub fn get<T>(
+    endpoint: T,
+) -> crate::types::Result<<T as IntoUrl>::Response>
 where
     T: IntoUrl,
 {
