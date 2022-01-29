@@ -62,7 +62,7 @@ use {
 pub fn get_with_client<T>(
     client: &reqwest::Client,
     endpoint: T,
-) -> Response
+) -> <T as IntoUrl>::Response
 where
     T: IntoUrl,
 {
