@@ -113,3 +113,10 @@ async fn spoiler_with_more_than_200_chars() {
 async fn spoiler_with_0_chars() {
     assert!(get(Spoiler("")).await.is_err());
 }
+
+#[tokio::test]
+async fn name_test() -> Result<(), NekosLifeError> {
+    get(Name).await?;
+
+    Ok(())
+}

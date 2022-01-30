@@ -10,7 +10,9 @@ make_text_endpoints! {
     /// `/fact` endpoint
     Fact =>
     /// `/spoiler` endpoint
-    Spoiler @ 'b |> str := owo <| !# 1..=1000
+    Spoiler @ 'b |> str := owo <| !# 1..=1000 =>
+    /// `/name` endpoint
+    Name
 }
 #[cfg(test)]
 mod tests;
