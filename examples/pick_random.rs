@@ -1,5 +1,5 @@
 use {
-    nekoslife,
+    nekoslife::{self, Category, CategoryIter},
     rand::{self, prelude::IteratorRandom},
 };
 
@@ -10,13 +10,11 @@ async fn main() {
     println!(
         "randome pick: {}",
         nekoslife::get(
-            <
-                nekoslife::Category as strum::IntoEnumIterator
-            >::iter()
+            Category::iter()
                 .choose(&mut rng)
                 .unwrap()
         )
-            .await
-            .unwrap()
+        .await
+        .unwrap()
     );
 }
