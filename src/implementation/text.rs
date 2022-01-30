@@ -15,7 +15,7 @@ make_text_endpoints! {
     Name
 }
 
-// pub mod eight_ball;
+pub mod eight_ball;
 
 #[cfg(test)]
 mod tests;
