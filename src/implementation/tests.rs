@@ -75,8 +75,7 @@ async fn no_new_endpoints(
 }
 
 #[tokio::test]
-async fn get_with_client_test() -> Result<(), NekosLifeError>
-{
+async fn get_with_client_test() -> crate::Result<()> {
     Ok(assert!(RESULT_URL.is_match(
         &get_with_client(&Client::new(), Category::Neko)
             .await?
@@ -85,7 +84,7 @@ async fn get_with_client_test() -> Result<(), NekosLifeError>
 
 #[tokio::test]
 async fn get_with_client_and_string_test(
-) -> Result<(), NekosLifeError> {
+) -> crate::Result<()> {
     Ok(assert!(RESULT_URL.is_match(
         &get_with_client(&Client::new(), "Neko").await?
     )))

@@ -15,7 +15,7 @@ impl IntoUrl for Category {
 
     type Fut = into_url_fut! {};
 
-    fn into_url(self) -> crate::types::Result<url::Url> {
+    fn into_url(self) -> crate::Result<url::Url> {
         Ok(string_to_endpoint!(self.into()))
     }
 
@@ -30,7 +30,7 @@ impl IntoUrl for &'static str {
 
     type Fut = into_url_fut! {};
 
-    fn into_url(self) -> types::Result<url::Url> {
+    fn into_url(self) -> crate::Result<url::Url> {
         Ok(string_to_endpoint!(
             Into::<&'static str>::into(
                 &<Category as std::str::FromStr>::from_str(

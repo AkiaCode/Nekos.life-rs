@@ -1,7 +1,6 @@
 use {
-    crate::IntoUrl,
+    crate::{IntoUrl, Response},
     reqwest::{self, Client},
-    // ::ApiResponseBody,
 };
 
 /// Gets the image url with the given client.
@@ -58,7 +57,7 @@ use {
 pub async fn get_with_client<T>(
     client: &reqwest::Client,
     endpoint: T,
-) -> crate::types::Result<<T as IntoUrl>::Response>
+) -> Response<T>
 where
     T: IntoUrl,
 {
@@ -109,9 +108,7 @@ where
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
-pub async fn get<T>(
-    endpoint: T,
-) -> crate::types::Result<<T as IntoUrl>::Response>
+pub async fn get<T>(endpoint: T) -> Response<T>
 where
     T: IntoUrl,
 {

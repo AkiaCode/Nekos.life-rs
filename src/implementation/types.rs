@@ -1,7 +1,5 @@
 //! important types to interact with the API.
 
-use crate::types::{self};
-
 /// a trait that must be implemented to be passed by the [`get`](super::get) function.
 ///
 /// this is slightly different from the [`TryInto`] trait in `std`,
@@ -13,11 +11,11 @@ pub trait IntoUrl {
 
     /// Future type for async method
     type Fut: std::future::Future<
-        Output = types::Result<Self::Response>,
+        Output = crate::Result<Self::Response>,
     >;
 
     /// consumes itself and returns a [`Result`](crate::types::Result) of [`UrlString`].
-    fn into_url(self) -> types::Result<url::Url>;
+    fn into_url(self) -> crate::Result<url::Url>;
 
     /// parse the body of the response
     fn parse(res: reqwest::Response) -> Self::Fut;

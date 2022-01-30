@@ -2,7 +2,7 @@ use const_format::{concatcp, str_repeat};
 
 use {
     super::*,
-    crate::{get, get_with_client, NekosLifeError},
+    crate::{get, get_with_client},
     pretty_assertions::assert_eq,
     // lazy_regex::{lazy_regex, Lazy, Regex},
     reqwest::Client,
@@ -15,8 +15,8 @@ const EXACTLY_200_CHARS: &str = str_repeat! {"a", 200};
 const EXACTLY_1000_CHARS: &str = str_repeat! {"a", 1000};
 
 #[tokio::test]
-async fn get_with_client_and_cat_test(
-) -> Result<(), NekosLifeError> {
+async fn get_with_client_and_cat_test() -> crate::Result<()>
+{
     dbg!(get_with_client(&Client::new(), Cat).await?);
 
     Ok(())
@@ -24,7 +24,7 @@ async fn get_with_client_and_cat_test(
 
 #[tokio::test]
 async fn get_with_client_and_owoify_test(
-) -> Result<(), NekosLifeError> {
+) -> crate::Result<()> {
     Ok(assert_eq!(
         get_with_client(
             &Client::new(),
@@ -37,8 +37,8 @@ async fn get_with_client_and_owoify_test(
 
 #[tokio::test]
 #[ignore]
-async fn owoify_with_exactly_200_chars(
-) -> Result<(), NekosLifeError> {
+async fn owoify_with_exactly_200_chars() -> crate::Result<()>
+{
     assert_eq!(EXACTLY_200_CHARS.len(), 200);
 
     assert_eq!(
@@ -65,21 +65,21 @@ async fn owoify_with_0_chars() {
 }
 
 #[tokio::test]
-async fn why_test() -> Result<(), NekosLifeError> {
+async fn why_test() -> crate::Result<()> {
     get(Why).await?;
 
     Ok(())
 }
 
 #[tokio::test]
-async fn fact_test() -> Result<(), NekosLifeError> {
+async fn fact_test() -> crate::Result<()> {
     get(Fact).await?;
 
     Ok(())
 }
 
 #[tokio::test]
-async fn spoiler_test() -> Result<(), NekosLifeError> {
+async fn spoiler_test() -> crate::Result<()> {
     Ok(assert_eq!(
         get(Spoiler("Abiria is cute and kawaii :)"))
             .await?,
@@ -90,7 +90,7 @@ async fn spoiler_test() -> Result<(), NekosLifeError> {
 #[tokio::test]
 #[ignore]
 async fn spoiler_with_exactly_200_chars(
-) -> Result<(), NekosLifeError> {
+) -> crate::Result<()> {
     assert_eq!(
         get(Spoiler(&EXACTLY_1000_CHARS)).await?,
         str_repeat! {"||a||", 1000}
@@ -115,7 +115,7 @@ async fn spoiler_with_0_chars() {
 }
 
 #[tokio::test]
-async fn name_test() -> Result<(), NekosLifeError> {
+async fn name_test() -> crate::Result<()> {
     get(Name).await?;
 
     Ok(())

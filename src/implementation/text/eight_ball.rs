@@ -47,7 +47,7 @@ impl IntoUrl for EightBall {
 
     type Fut = into_url_fut! {};
 
-    fn into_url(self) -> crate::types::Result<url::Url> {
+    fn into_url(self) -> crate::Result<url::Url> {
         Ok(crate::BASEURL.join("8ball")?)
     }
 

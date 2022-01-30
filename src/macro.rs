@@ -200,7 +200,7 @@ macro_rules! make_text_endpoints {
 
                 fn into_url(
                     self,
-                ) -> $ crate::types::Result<
+                ) -> $ crate::Result<
                     url::Url
                 > {
                     paste::paste! {
