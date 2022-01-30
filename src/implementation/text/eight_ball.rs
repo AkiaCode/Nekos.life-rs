@@ -60,5 +60,5 @@ impl IntoUrl for EightBall {
     }
 }
 
-// #[cfg(test)]
-// mod tests;
+#[cfg(test)]
+mod tests;
