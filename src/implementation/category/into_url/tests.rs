@@ -1,9 +1,12 @@
 // use pretty_assertions::assert_eq;
 
-use {crate::BASEURL, pretty_assertions::assert_eq};
+use {
+    crate::{UnitResult, BASEURL},
+    pretty_assertions::assert_eq,
+};
 
 #[test]
-fn string_to_url() -> crate::Result<()> {
+fn string_to_url() -> UnitResult {
     use super::IntoUrl;
 
     Ok(assert_eq!(
@@ -16,7 +19,7 @@ fn string_to_url() -> crate::Result<()> {
 }
 
 #[tokio::test]
-async fn parse_test() -> crate::Result<()> {
+async fn parse_test() -> UnitResult {
     Ok(assert!(lazy_regex::regex_is_match!(
         r"^https://cdn\.nekos\.life/neko/[\w_.]+$",
         &<&str as super::IntoUrl>::parse(

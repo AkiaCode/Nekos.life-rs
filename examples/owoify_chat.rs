@@ -1,7 +1,7 @@
 use {tokio::io::AsyncBufReadExt, tokio_stream::StreamExt};
 
 #[tokio::main]
-async fn main() -> nekoslife::Result<()> {
+async fn main() -> nekoslife::UnitResult {
     let client = reqwest::Client::new();
 
     println!("[OwO chat]\n\nsay 'hello' to owo!\n");

@@ -1,5 +1,6 @@
 use {
     super::*,
+    crate::UnitResult,
     pretty_assertions::{assert_eq, assert_ne},
     serde::Deserialize,
     serde_json::{self, from_str},
@@ -54,7 +55,7 @@ struct Model {
 
 #[tokio::test]
 #[ignore]
-async fn get_all_answer() -> crate::Result<()> {
+async fn get_all_answer() -> UnitResult {
     let client = reqwest::Client::new();
 
     let mut col = std::collections::HashSet::new();
@@ -104,7 +105,7 @@ fn deserialize_from_json() {
 }
 
 #[tokio::test]
-async fn get_8ball_test() -> crate::Result<()> {
+async fn get_8ball_test() -> UnitResult {
     let eight_ball_res: EightBallResponse =
         crate::get(EightBall).await?;
 

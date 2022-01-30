@@ -1,8 +1,6 @@
 use {
     super::*,
-    crate::{
-        Category, CategoryIter, NekosLifeError, BASEURL,
-    },
+    crate::{Category, CategoryIter, UnitResult, BASEURL},
     lazy_regex::{lazy_regex, Lazy, Regex},
     pretty_assertions::assert_eq,
     std::error,
@@ -75,7 +73,7 @@ async fn no_new_endpoints(
 }
 
 #[tokio::test]
-async fn get_with_client_test() -> crate::Result<()> {
+async fn get_with_client_test() -> UnitResult {
     Ok(assert!(RESULT_URL.is_match(
         &get_with_client(&Client::new(), Category::Neko)
             .await?
@@ -83,8 +81,7 @@ async fn get_with_client_test() -> crate::Result<()> {
 }
 
 #[tokio::test]
-async fn get_with_client_and_string_test(
-) -> crate::Result<()> {
+async fn get_with_client_and_string_test() -> UnitResult {
     Ok(assert!(RESULT_URL.is_match(
         &get_with_client(&Client::new(), "Neko").await?
     )))

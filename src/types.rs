@@ -80,9 +80,10 @@ impl UnitTestError {
 /// # Examples
 ///
 /// ```rust
+/// # use nekoslife::UnitResult;
 /// // this function can return the `NekosLifeError`!
 /// #[tokio::main]
-/// async fn main() -> nekoslife::Result<()> {
+/// async fn main() -> UnitResult {
 ///     // get url from API.
 ///     let res: nekoslife::Result<nekoslife::UrlString> = nekoslife::get("neko").await;
 ///     
@@ -93,6 +94,19 @@ impl UnitTestError {
 /// }
 /// ```
 pub type Result<T> = std::result::Result<T, NekosLifeError>;
+
+/// most concise type that represents `()` or [`Error`](self::NekosLifeError).
+///
+/// # Usage
+///
+/// this type is very useful when particular code,\
+/// such as uniit testing or doc test etc.
+///
+/// unlike [`Result`](self::Result) of nekoslife crate,\
+/// it has different name then [`Result`](self::Result) of prelude.
+///
+/// so it can be used without any 'addiontal path', such as `UnitResult` rather than `nekoslife::Result<()>`.
+pub type UnitResult = self::Result<()>;
 
 /// Type that represents the result url.
 ///

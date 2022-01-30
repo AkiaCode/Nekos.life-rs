@@ -2,7 +2,7 @@ use const_format::{concatcp, str_repeat};
 
 use {
     super::*,
-    crate::{get, get_with_client},
+    crate::{get, get_with_client, UnitResult},
     pretty_assertions::assert_eq,
     // lazy_regex::{lazy_regex, Lazy, Regex},
     reqwest::Client,
@@ -15,16 +15,14 @@ const EXACTLY_200_CHARS: &str = str_repeat! {"a", 200};
 const EXACTLY_1000_CHARS: &str = str_repeat! {"a", 1000};
 
 #[tokio::test]
-async fn get_with_client_and_cat_test() -> crate::Result<()>
-{
+async fn get_with_client_and_cat_test() -> UnitResult {
     dbg!(get_with_client(&Client::new(), Cat).await?);
 
     Ok(())
 }
 
 #[tokio::test]
-async fn get_with_client_and_owoify_test(
-) -> crate::Result<()> {
+async fn get_with_client_and_owoify_test() -> UnitResult {
     Ok(assert_eq!(
         get_with_client(
             &Client::new(),
@@ -37,8 +35,7 @@ async fn get_with_client_and_owoify_test(
 
 #[tokio::test]
 #[ignore]
-async fn owoify_with_exactly_200_chars() -> crate::Result<()>
-{
+async fn owoify_with_exactly_200_chars() -> UnitResult {
     assert_eq!(EXACTLY_200_CHARS.len(), 200);
 
     assert_eq!(
@@ -65,21 +62,21 @@ async fn owoify_with_0_chars() {
 }
 
 #[tokio::test]
-async fn why_test() -> crate::Result<()> {
+async fn why_test() -> UnitResult {
     get(Why).await?;
 
     Ok(())
 }
 
 #[tokio::test]
-async fn fact_test() -> crate::Result<()> {
+async fn fact_test() -> UnitResult {
     get(Fact).await?;
 
     Ok(())
 }
 
 #[tokio::test]
-async fn spoiler_test() -> crate::Result<()> {
+async fn spoiler_test() -> UnitResult {
     Ok(assert_eq!(
         get(Spoiler("Abiria is cute and kawaii :)"))
             .await?,
@@ -89,8 +86,7 @@ async fn spoiler_test() -> crate::Result<()> {
 
 #[tokio::test]
 #[ignore]
-async fn spoiler_with_exactly_200_chars(
-) -> crate::Result<()> {
+async fn spoiler_with_exactly_200_chars() -> UnitResult {
     assert_eq!(
         get(Spoiler(&EXACTLY_1000_CHARS)).await?,
         str_repeat! {"||a||", 1000}
@@ -115,7 +111,7 @@ async fn spoiler_with_0_chars() {
 }
 
 #[tokio::test]
-async fn name_test() -> crate::Result<()> {
+async fn name_test() -> UnitResult {
     get(Name).await?;
 
     Ok(())
