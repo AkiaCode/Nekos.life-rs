@@ -7,6 +7,7 @@ use crate::IntoUrl;
 pub struct EightBall;
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum EightBallMessage {
     #[serde(rename(deserialize = "Very Likely"))]
     VeryLikely,

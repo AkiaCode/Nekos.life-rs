@@ -23,6 +23,7 @@
     ascii_case_insensitive
 )]
 #[allow(missing_docs)]
+#[non_exhaustive]
 pub enum Category {
     Tickle,
     Slap,
