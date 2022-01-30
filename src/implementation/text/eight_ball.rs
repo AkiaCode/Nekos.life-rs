@@ -2,36 +2,63 @@
 
 use serde::Deserialize;
 
-#[derive(Debug, strum::EnumString, Deserialize)]
+use crate::IntoUrl;
+
+pub struct EightBall;
+
+#[derive(Debug, Deserialize, PartialEq, Eq)]
 pub enum EightBallMessage {
+    #[serde(rename(deserialize = "Very Likely"))]
     VeryLikely,
+    #[serde(rename(deserialize = "Wait For It"))]
     WaitForIt,
     Yes,
     Absolutely,
-    #[strum(serialize = "Itwillpass")]
+    #[serde(rename(deserialize = "It will pass"))]
     ItWillPass,
-    #[strum(serialize = "countonit")]
+    #[serde(rename(deserialize = "count on it"))]
     CountOnIt,
-    #[strum(serialize = "cannottellnow")]
+    #[serde(rename(deserialize = "cannot tell now"))]
     CannotTellNow,
     Maybe,
+    #[serde(rename(deserialize = "Not Now"))]
     NotNow,
-    #[strum(serialize = "ItisOK")]
+    #[serde(rename(deserialize = "It is OK"))]
     ItIsOk,
-    #[strum(serialize = "You'rehot")]
+    #[serde(rename(deserialize = "You're hot"))]
     YouAreHot,
+    #[serde(rename(deserialize = "Ask Again"))]
     AskAgain,
     No,
-    #[strum(serialize = "Nodoubt")]
+    #[serde(rename(deserialize = "No doubt"))]
     NoDoubt,
+    #[serde(rename(deserialize = "Go For It"))]
     GoForIt,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct EightBallResponse {
     pub response: EightBallMessage,
     pub url: crate::UrlString,
 }
 
-#[cfg(test)]
-mod tests;
+impl IntoUrl for EightBall {
+    type Response = EightBallResponse;
+
+    type Fut = into_url_fut! {};
+
+    fn into_url(self) -> crate::types::Result<url::Url> {
+        Ok(crate::BASEURL.join("8ball")?)
+    }
+
+    fn parse(res: reqwest::Response) -> Self::Fut {
+        println!("{:#?}", res);
+
+        Box::pin(async move {
+            Ok(res.json::<EightBallResponse>().await?)
+        })
+    }
+}
+
+// #[cfg(test)]
+// mod tests;
