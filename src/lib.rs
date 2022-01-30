@@ -7,7 +7,7 @@
 mod r#macro;
 mod implementation;
 pub mod r#static;
-mod types;
+pub mod types;
 
 #[allow(unused_imports)]
 #[doc(inline)]

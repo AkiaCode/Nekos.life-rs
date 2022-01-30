@@ -70,23 +70,52 @@ impl UnitTestError {
 /// This type broadly may be used in this crate, such as in the function signatures.
 ///
 /// The purpose of the existence of this type is to prevent writing
-/// repetitive type signatures such as `Result<String, NekosLifeError>`.\
+/// repetitive type signatures such as `Result<String, NekosLifeError>`.
+///
 /// and if you want to use this type in your code,
-/// you have to give this another name to prevent shadowing the prelude's [`Result`],
+/// you have to give this another name\
+/// to prevent shadowing the prelude's [`Result`],
 /// or use a full name, such as `nekoslife::Result`.
+///
+/// # Examples
+///
+/// ```rust
+/// // this function can return the `NekosLifeError`!
+/// #[tokio::main]
+/// async fn main() -> nekoslife::Result<()> {
+///     // get url from API.
+///     let res: nekoslife::Result<nekoslife::UrlString> = nekoslife::get("neko").await;
+///     
+///     // do something with the url.
+///     println!("result url: {}", res?);
+///
+///     Ok(())
+/// }
+/// ```
 pub type Result<T> = std::result::Result<T, NekosLifeError>;
 
 /// Type that represents the result url.
 ///
-/// This is type alias for [String],
+/// This is just type alias for [String],
 /// and you can clarify the types or signatures
-/// by using this type instead of just using String,
+/// by using this type instead of just using String,\
 /// which is arbitrary and hard to understand exactly what it means.
+///
+/// # Examples
+///
+/// ```rust
+/// pub struct Benchmark {
+///    pub result_url: nekoslife::UrlString,
+///    pub start: std::time::Instant,
+///    pub end: std::time::Instant,
+/// }
+/// ```
 pub type UrlString = String;
 
 /// The return type of the [`get`](crate::get) or other functions.
 ///
-/// This type allows you to wire single type (without generics) for the return / result types
+/// This type allows you to write single type (without generics)\
+/// for the return / result types
 /// of the [`get`](crate::get), [`get_with_client`](crate::get_with_client), [`blocking::get`](crate::blocking::get)
 /// and [`blocking::get_with_client`](crate::blocking::get_with_client) functions.
 ///
@@ -101,11 +130,26 @@ pub type UrlString = String;
 ///     Response,
 /// };
 ///
-/// // note that Response is alias for Result,
+/// // note that Response is alias for nekoslife::Result,
 /// // so you need to unwrap or match it.
-/// let image_url: Response = get(Category::Neko).await;
-/// // this is equals to
-/// // let image_url: Result<String, nekoslife::NekosLifeError> = get(Category::Neko).await;
+/// let image_url: Response<Category> = get(Category::Neko).await;
 /// # }
 /// ```
-pub type Response = self::Result<UrlString>;
+/// this is equals to
+/// ```
+/// # use nekoslife::{
+/// #   get,
+/// #  Category,
+/// # };
+/// # #[tokio::main]
+/// # async fn main() {
+/// let image_url: Result<<Category as nekoslife::IntoUrl>::Response, nekoslife::NekosLifeError> = get(Category::Neko).await;
+/// # }
+/// ```
+#[rustfmt::skip]
+pub type Response<T> =
+    self::Result<
+        <
+            T as crate::IntoUrl
+        >::Response
+    >;
