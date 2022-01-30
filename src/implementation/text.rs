@@ -1,4 +1,4 @@
-#![allow(missing_docs)]
+//! other text-based endpoints
 
 make_text_endpoints! {
     /// `/cat` endpoint
@@ -14,5 +14,8 @@ make_text_endpoints! {
     /// `/name` endpoint
     Name
 }
+
+// pub mod eight_ball;
+
 #[cfg(test)]
 mod tests;

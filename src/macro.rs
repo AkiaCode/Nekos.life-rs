@@ -96,11 +96,13 @@ macro_rules! make_text_endpoints {
         ->> $ field :ident
     ) => {
         paste::paste! {
-            #[derive(
+            #[
+                allow(missing_docs)
+            ] #[derive(
                 serde::Deserialize
             )] pub struct [<
                 $ endpoint
-                Model
+                Response
             >] {
                 $ field: $ crate::UrlString,
             }
@@ -236,14 +238,14 @@ macro_rules! make_text_endpoints {
                                                     .len(),
                                                 $ range
                                             } { self.0 } else {
-                                                Err($crate
+                                                return Err($crate
                                                     ::NekosLifeError
                                                     ::OutOfRangeError {
                                                     endpoint_name: stringify! {
                                                         $ endpoint
                                                     }.to_owned(),
                                                     range: $ range,
-                                                })?
+                                                })
                                             }
                                         ) ;
                                 ) ?
@@ -269,7 +271,7 @@ macro_rules! make_text_endpoints {
                         parse_json |>
                             [<
                                 $ endpoint
-                                Model
+                                Response
                             >]
                             ,
                     }

@@ -47,7 +47,7 @@ lazy_static! {
     pub static ref BASEURL: Url =
         Url::parse(
             &std::env::var(CUSTOM_BASEURL_ENV_VAR)
-                .unwrap_or(DEFAULT_BASEURL.to_owned())
+                .unwrap_or_else(|_| DEFAULT_BASEURL.to_owned())
         )
             .expect("Invalid base url");
 }

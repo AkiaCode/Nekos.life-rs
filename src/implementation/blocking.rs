@@ -26,7 +26,7 @@ use {
 /// most cases, however, will not need to call this directly.
 /// if you find some simplest way, consider using [`blocking::get`](get) instead.
 ///
-#[doc = include_str!("../docs/return.md")]
+#[doc = include_str!("../../docs/return.md")]
 ///
 /// # Examples
 ///
@@ -85,7 +85,7 @@ where
 /// if you have to reuse the client or set your client carefully,
 /// consider using the [`blocking::get_with_client`](get_with_client) function instead.
 ///
-#[doc = include_str!("../docs/return.md")]
+#[doc = include_str!("../../docs/return.md")]
 ///
 /// # Examples
 ///
