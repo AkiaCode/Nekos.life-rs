@@ -6,10 +6,11 @@
 #[macro_use]
 mod r#macro;
 mod implementation;
-mod r#static;
+pub mod r#static;
 mod types;
 
 #[allow(unused_imports)]
+#[doc(inline)]
 pub use {
     implementation::{
         category::{self, Category},
