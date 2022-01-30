@@ -51,7 +51,7 @@ use {
 ///     // then print the each result.
 ///     println!("{url}");
 /// }
-/// # Ok::<(), nekoslife::NekosLifeError>(())
+/// # Ok::<(), nekoslife::Error>(())
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
@@ -92,7 +92,7 @@ where
 ///
 /// ```rust,no_run
 /// let url: String = nekoslife::blocking_get(nekoslife::Category::Waifu)?;
-/// # Ok::<(), nekoslife::NekosLifeError>(())
+/// # Ok::<(), nekoslife::Error>(())
 /// ```
 ///
 /// [get]: crate::get

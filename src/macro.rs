@@ -32,6 +32,8 @@ macro_rules! parse_json {
     };
 }
 
+#[macro_export]
+#[allow(missing_docs)]
 macro_rules! into_url_fut {
     () => {
         std
@@ -41,7 +43,8 @@ macro_rules! into_url_fut {
                 dyn std
                 ::future
                 ::Future<
-                    Output = crate
+                    Output = $
+                    crate
                     ::types
                     ::Result<
                         Self::Response
@@ -239,7 +242,7 @@ macro_rules! make_text_endpoints {
                                                 $ range
                                             } { self.0 } else {
                                                 return Err($crate
-                                                    ::NekosLifeError
+                                                    ::Error
                                                     ::OutOfRangeError {
                                                     endpoint_name: stringify! {
                                                         $ endpoint

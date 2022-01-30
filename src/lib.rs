@@ -21,8 +21,8 @@ pub use {
     r#static::BASEURL,
     strum::IntoEnumIterator as CategoryIter,
     types::{
-        NekosLifeError, Response, Result, UnitResult,
-        UrlString,
+        error::{self, Error},
+        Response, Result, UnitResult, UrlString,
     },
 };
 

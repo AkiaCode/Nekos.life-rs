@@ -30,7 +30,7 @@ async fn all_endpoints_work() {
 async fn no_new_endpoints(
 ) -> Result<(), Box<dyn error::Error>> {
     use {
-        crate::types::UnitTestError, regex::Regex,
+        crate::types::error::UnitTestError, regex::Regex,
         std::collections::HashSet, strum::IntoEnumIterator,
     };
 

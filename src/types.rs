@@ -1,76 +1,11 @@
 //! Reusable types of nekoslife crate.
 
-/// The error type for all kind of errors that can occur while accessing the api.
-#[derive(thiserror::Error, Debug)]
-pub enum NekosLifeError {
-    /// network errors from [`reqwest`]
-    ///
-    /// in general, this error will occur when the given url is 404,\
-    /// such like: `reqwest::Error { kind: Decode, source: Error("missing field url", line: X, column: Y) }`,\
-    /// which means reqwest couldn't find the `url` field in the response body.
-    #[error("reqwest error")]
-    ReqwestError(#[from] reqwest::Error),
-
-    #[error("invalid url was provided")]
-    /// parsing errors from [`url::ParseError`]
-    ///
-    /// this error may occur if the provided url was invalid.
-    /// for example:
-    ///
-    /// * when malformed [`BASEURL`](struct@crate::BASEURL) was given
-    /// * when invlid Category was given
-    UrlParseError(#[from] url::ParseError),
-
-    /// async runtime error from [`std::io::Error`]
-    ///
-    /// occurs when failed to create new tokio runtime
-    #[error("unable to create runtime")]
-    RuntimeError(#[from] std::io::Error),
-
-    /// invalid category string.
-    ///
-    /// occurs when given string does not exists in the [`Category`] enum.
-    /// this error will be from [`strum::ParseError`]
-    #[error("{error}: `{url}` is not a valid category or endpoint")]
-    UnknownEndpoint {
-        /// the url which couldn't be parsed
-        url: String,
-        /// strum parse error
-        error: strum::ParseError,
-    },
-
-    ///
-    #[error(
-        "{endpoint_name} text must be between {start} and {end} characters",
-        start = range.start(),
-        end = range.end(),
-    )]
-    OutOfRangeError {
-        ///
-        endpoint_name: String,
-        ///
-        range: std::ops::RangeInclusive<usize>,
-    },
-}
-
-#[cfg(test)]
-#[derive(Debug, thiserror::Error)]
-#[error("unittest error: {0}")]
-pub(crate) struct UnitTestError(String);
-
-#[cfg(test)]
-impl UnitTestError {
-    pub fn new(message: &str) -> Self {
-        Self(message.to_owned())
-    }
-}
-
 /// A specialized [`Result`] type for [nekoslife](crate) crate.
 ///
 /// This type broadly may be used in this crate, such as in the function signatures.
 ///
 /// The purpose of the existence of this type is to prevent writing
-/// repetitive type signatures such as `Result<String, NekosLifeError>`.
+/// repetitive type signatures such as `Result<String, Error>`.
 ///
 /// and if you want to use this type in your code,
 /// you have to give this another name\
@@ -81,7 +16,7 @@ impl UnitTestError {
 ///
 /// ```rust
 /// # use nekoslife::UnitResult;
-/// // this function can return the `NekosLifeError`!
+/// // this function can return the `Error`!
 /// #[tokio::main]
 /// async fn main() -> UnitResult {
 ///     // get url from API.
@@ -93,9 +28,9 @@ impl UnitTestError {
 ///     Ok(())
 /// }
 /// ```
-pub type Result<T> = std::result::Result<T, NekosLifeError>;
+pub type Result<T> = std::result::Result<T, Error>;
 
-/// most concise type that represents `()` or [`Error`](self::NekosLifeError).
+/// most concise type that represents `()` or [`Error`](error::Error).
 ///
 /// # Usage
 ///
@@ -157,7 +92,7 @@ pub type UrlString = String;
 /// # };
 /// # #[tokio::main]
 /// # async fn main() {
-/// let image_url: Result<<Category as nekoslife::IntoUrl>::Response, nekoslife::NekosLifeError> = get(Category::Neko).await;
+/// let image_url: Result<<Category as nekoslife::IntoUrl>::Response, nekoslife::Error> = get(Category::Neko).await;
 /// # }
 /// ```
 #[rustfmt::skip]
@@ -167,3 +102,6 @@ pub type Response<T> =
             T as crate::IntoUrl
         >::Response
     >;
+
+pub mod error;
+use error::Error;

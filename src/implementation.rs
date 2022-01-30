@@ -49,7 +49,7 @@ use {
 ///     // then print the each result.
 ///     println!("{url}");
 /// }
-/// # Ok::<(), nekoslife::NekosLifeError>(())
+/// # Ok::<(), nekoslife::Error>(())
 /// # });
 /// ```
 ///
@@ -103,7 +103,7 @@ where
 ///
 /// // then print the url.
 /// println!("{url}");
-/// # Ok::<(), nekoslife::NekosLifeError>(())
+/// # Ok::<(), nekoslife::Error>(())
 /// });
 /// ```
 ///

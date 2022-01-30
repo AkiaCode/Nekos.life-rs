@@ -36,12 +36,14 @@ impl IntoUrl for &'static str {
                 &<Category as std::str::FromStr>::from_str(
                     self
                 )
-                .map_err(|error| {
-                    crate::NekosLifeError::UnknownEndpoint {
-                        error,
-                        url: self.to_owned(),
+                .map_err(
+                    |parse_error| {
+                        crate::Error::UnknownEndpoint {
+                            endpoint_name: self.to_owned(),
+                            parse_error,
+                        }
                     }
-                })?
+                )?
             )
         ))
     }
