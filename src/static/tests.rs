@@ -58,7 +58,10 @@ fn url_join() -> Result<(), url::ParseError> {
     );
 
     assert_eq!(
-        BASEURL.join("img/")?.join("category")?.as_str(),
+        BASEURL
+            .join("img/")?
+            .join("category")?
+            .as_str(),
         formatcp!("{DEFAULT_BASEURL}img/category") // "https://nekos.life/api/v2/img/category"
     );
 

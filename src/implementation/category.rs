@@ -116,7 +116,5 @@ pub enum Category {
     SmallBoobs,
 }
 
-mod into_url;
-
 #[cfg(test)]
 mod tests;

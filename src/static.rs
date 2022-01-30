@@ -44,7 +44,7 @@ lazy_static! {
     /// and user must not access to this directly.\
     /// the only way to change the `BASEURL`
     /// is to set enviroment variable named `NEKOS_LIFE_API_URL`.
-    pub(crate) static ref BASEURL: Url =
+    pub static ref BASEURL: Url =
         Url::parse(
             &std::env::var(CUSTOM_BASEURL_ENV_VAR)
                 .unwrap_or(DEFAULT_BASEURL.to_owned())

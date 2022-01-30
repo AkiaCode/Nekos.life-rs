@@ -10,8 +10,6 @@ mod r#static;
 mod types;
 
 #[allow(unused_imports)]
-use r#static::BASEURL;
-
 pub use {
     implementation::{
         category::{self, Category},
@@ -19,6 +17,7 @@ pub use {
         text::{self, Cat, Fact, OwOify, Spoiler, Why},
         types::IntoUrl,
     },
+    r#static::BASEURL,
     strum::IntoEnumIterator as CategoryIter,
     types::{NekosLifeError, Response, Result, UrlString},
 };

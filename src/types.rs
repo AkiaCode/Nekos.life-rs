@@ -17,7 +17,7 @@ pub enum NekosLifeError {
     /// this error may occur if the provided url was invalid.
     /// for example:
     ///
-    /// * when malformed [`BASEURL`] was given
+    /// * when malformed [`BASEURL`](struct@crate::BASEURL) was given
     /// * when invlid Category was given
     UrlParseError(#[from] url::ParseError),
 

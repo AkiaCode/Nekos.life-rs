@@ -13,17 +13,17 @@ use {
 /// this function returns [Future](std::future::Future) which must be awaited.
 /// so you have to run this in an async context.
 /// if you don't care about performance or only need blocking API,
-/// check the [`blocking_get`](create::blocking_get) function out, which is blocking version of this.
+/// check the [`blocking::get`](blocking::get) function out, which is blocking version of this.
 ///
 /// ## Reusability
 ///
 /// this function takes a [client](reqwest::Client) as an argument,
 /// so if you have to make countless number of requests.\
 /// it is good idea to reuse the same client for each request,
-/// by using this function instead of [`blocking_get`].
+/// by using this function instead of [`blocking::get`].
 ///
 /// most cases, however, will not need to call this directly.
-/// if you find some simplest way, consider using [`blocking_get`](blocking_get) instead.
+/// if you find some simplest way, consider using [`blocking::get`](blocking::get) instead.
 ///
 #[doc = include_str!("../docs/return.md")]
 ///
@@ -84,7 +84,7 @@ where
 /// this function returns [Future](std::future::Future) which must be awaited.
 /// so you have to run this in an async context.
 /// if you don't care about performance or only need blocking API,
-/// check the [`blocking_get`](create::blocking_get) function out, which is blocking version of this.
+/// check the [`blocking::get`](self::blocking::get) function out, which is blocking version of this.
 ///
 /// ## Reusability
 ///

@@ -2,7 +2,7 @@
 
 use crate::types::{self};
 
-/// a trait that must be implemented to be passed by the [`get`] function.
+/// a trait that must be implemented to be passed by the [`get`](super::get) function.
 ///
 /// this is slightly different from the [`TryInto`] trait in `std`,
 /// since Rust does not allow to derive foreign traits to foreign types,\
