@@ -16,6 +16,7 @@ pub use {
     implementation::{
         category::{self, Category},
         get, get_with_client,
+        text::{self, Cat, Fact, OwOify, Spoiler, Why},
         types::IntoUrl,
     },
     types::{NekosLifeError, Response, Result, UrlString},
