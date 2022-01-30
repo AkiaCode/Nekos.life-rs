@@ -18,6 +18,7 @@ pub use {
         get, get_with_client,
         types::IntoUrl,
     },
+    strum::IntoEnumIterator as CategoryIter,
     types::{NekosLifeError, Response, Result, UrlString},
 };
 
