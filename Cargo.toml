@@ -52,6 +52,7 @@ features = ["rt"]
 const_format = "0.2.22"
 lazy-regex = "2.2.2"
 pretty_assertions = "1.0.0"
+rand = "0.8.4"
 regex = "1.5.4"
 
 [dev-dependencies.tokio]
