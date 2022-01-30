@@ -54,12 +54,15 @@ lazy-regex = "2.2.2"
 pretty_assertions = "1.0.0"
 rand = "0.8.4"
 regex = "1.5.4"
+tokio-stream = "0.1.8"
 
 [dev-dependencies.tokio]
 version = "1.15.0"
 features = [
     "macros",
     "rt-multi-thread",
+    "io-util",
+    "io-std",
 ]
 
 [[example]]
