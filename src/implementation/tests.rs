@@ -1,10 +1,12 @@
 use {
     super::*,
-    crate::{Category, NekosLifeError, BASEURL},
+    crate::{
+        Category, CategoryIter, NekosLifeError, BASEURL,
+    },
     lazy_regex::{lazy_regex, Lazy, Regex},
     pretty_assertions::assert_eq,
     std::error,
-    strum::IntoEnumIterator,
+    // IntoEnumIterator,
 };
 
 static RESULT_URL: Lazy<Regex> = lazy_regex!(
@@ -18,9 +20,9 @@ async fn all_endpoints_work() {
 
     for variant in Category::iter() {
         #[rustfmt::skip]
-            get_with_client(&client, variant)
-                .await
-                .unwrap_or_else(|_| panic!("{variant} does not work"));
+        get_with_client(&client, variant)
+            .await
+            .unwrap_or_else(|_| panic!("{variant} does not work"));
         println!("{variant}: works");
     }
 }
