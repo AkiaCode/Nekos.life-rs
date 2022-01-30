@@ -2,40 +2,64 @@
 name = "nekoslife"
 version = "0.2.1"
 authors = ["AkiaCode <catry.me@gmail.com>"]
+categories = ["api-bindings"]
 documentation = "https://docs.rs/nekoslife"
 edition = "2021"
+homepage = "https://github.com/AkiaCode/Nekos.life-rs"
+keywords = [
+    "api",
+    "async",
+    "nekoslife",
+    "implementation",
+    "wrapper",
+]
 license = "MIT"
+readme = "README.md"
 repository = "https://github.com/AkiaCode/Nekos.life-rs"
+rust-version = "1.58"
 description = "nekos.life wrapper library"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["default-tls", "sfw", "nsfw"]
+default = ["default-tls"]
+blocking = ["tokio"]
 default-tls = ["reqwest/default-tls"]
 native-tls = ["reqwest/native-tls"]
 rustls-tls = ["reqwest/rustls-tls"]
 
-sfw = []
-nsfw = []
-
-blocking = ["reqwest/blocking"]
+[profile.release-cg]
+inherits = "release"
+codegen-units = 1
 
 [dependencies]
-const_format = "0.2.22"
 lazy_static = "1.4.0"
 paste = "1.0.6"
-reqwest = { version = "0.11", default-features = false, features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 strum = { version = "0.23.0", features = ["derive"] }
 thiserror = "1.0"
-tokio = { version = "1.15.0", features = ["rt"] }
 url = "2.2.2"
 
+[dependencies.reqwest]
+version = "0.11"
+default-features = false
+features = ["json"]
+
+[dependencies.tokio]
+version = "1.15.0"
+optional = true
+features = ["rt"]
+
 [dev-dependencies]
+const_format = "0.2.22"
 lazy-regex = "2.2.2"
 pretty_assertions = "1.0.0"
 regex = "1.5.4"
-tokio = { version = "1", features = ["full"] }
+
+[dev-dependencies.tokio]
+version = "1.15.0"
+features = [
+    "macros",
+    "rt-multi-thread",
+]
 
 [[example]]
 name = "waifu_blocking"
