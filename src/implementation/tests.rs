@@ -4,7 +4,6 @@ use {
     lazy_regex::{lazy_regex, Lazy, Regex},
     pretty_assertions::assert_eq,
     std::error,
-    // IntoEnumIterator,
 };
 
 static RESULT_URL: Lazy<Regex> = lazy_regex!(

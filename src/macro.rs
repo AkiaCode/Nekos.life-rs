@@ -57,7 +57,6 @@ macro_rules! parse_json {
 /// }
 /// ```
 #[macro_export]
-#[allow(missing_docs)]
 macro_rules! into_url_fut {
     () => {
         std

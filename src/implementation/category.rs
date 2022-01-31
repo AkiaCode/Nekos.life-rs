@@ -90,11 +90,14 @@
 /// instead, you can use [`iter`][iter]
 /// to get an iterator of all categories.
 ///
-/// ```rust,ignore
+/// ```rust
 /// # #[tokio::main]
 /// # async fn main() -> nekoslife::UnitResult {
+/// // use 'CategoryIter' to use 'Category::iter' method.
+/// use nekoslife::CategoryIter;
+///
 /// // you can use for loop for iterator
-/// for category in nekoslife::Category::iter() {
+/// for category in nekoslife::Category::iter().take(3) {
 ///     // get the result one by one.
 ///     let res = nekoslife::get(category).await?;
 ///
@@ -113,6 +116,9 @@
 /// ```rust
 #[doc = include_str!("../../examples/pick_random.rs")]
 /// ```
+///
+/// however, don't forget to `use` [`CategoryIter`](trait@crate::CategoryIter)
+/// in your code before using it.
 ///
 /// [non-exhaustive]: https://doc.rust-lang.org/reference/attributes/type_system.html#the-non_exhaustive-attribute
 /// [iter]: https://docs.rs/strum/latest/strum/trait.IntoEnumIterator.html#tymethod.iter
