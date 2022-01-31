@@ -1,6 +1,6 @@
 use {
-    nekoslife::{self, Category, CategoryIter},
-    rand::{self, prelude::IteratorRandom},
+    nekoslife::{Category, CategoryIter},
+    rand::prelude::IteratorRandom,
 };
 
 #[tokio::main]

@@ -52,8 +52,8 @@
 ///
 /// instead of
 ///
-/// ```compile_fail
-/// nekoslife::get(nekoslife::Category::Neko); // Err(nekoslife::Error::UnkownEndpoint)
+/// ```rust
+/// nekoslife::get(nekoslife::Category::Neko);
 /// ```
 ///
 /// this is useful for testing and development purposes.

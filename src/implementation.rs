@@ -1,3 +1,34 @@
+//! The public api of the implementation.
+//!
+//! This module consists of four parts:
+//!
+//! 1. implementations part:
+//! these are the most used functions of this crate.
+//!
+//!     - [`get`]: just get the response from the given endpoint.
+//!
+//!     - [`get_with_client`]: same as `get`, but user can pass a [`client`](reqwest::Client) to it.
+//!
+//! 2. [blocking](blocking) part:
+//! these are the blocking versions of the above.
+//!
+//!     - [`blocking_get`](blocking::get): same as [`get`], but it is blocking.
+//!     
+//!     - [`blocking_get_with_client`](blocking::get_with_client): same as [`get_with_client`], but it is blocking as well.
+//!
+//! 3. endpoints part:
+//! these are the endpoints that can be consumed by the above functions.
+//!
+//!     - [`category`]: the enum that represents the image categories.
+//!
+//!     - [`text`]: a module that contains all of the text based endpoints.
+//!
+//! 4. [types](types) part:
+//! this module contains the [`IntoUrl`](crate::IntoUrl) trait\
+//! which determines how the endpoints are converted to [`Url`](reqwest::Url).
+//!
+//! please see each module level documentation for more details.
+
 use {
     crate::{IntoUrl, Response},
     reqwest::{self, Client},
@@ -7,53 +38,21 @@ use {
 ///
 /// # Note
 ///
-/// ## Context
+#[doc = include_str!("../docs/context.md")]
 ///
-/// this function returns [Future](std::future::Future) which must be awaited.
-/// so you have to run this in an async context.
-/// if you don't care about performance or only need blocking API,
-/// check the [`blocking::get`](blocking::get) function out, which is blocking version of this.
+/// [blocking_version]: crate::blocking_get_with_client
 ///
-/// ## Reusability
+#[doc = include_str!("../docs/reusability_client.md")]
 ///
-/// this function takes a [client](reqwest::Client) as an argument,
-/// so if you have to make countless number of requests.\
-/// it is good idea to reuse the same client for each request,
-/// by using this function instead of [`blocking::get`].
-///
-/// most cases, however, will not need to call this directly.
-/// if you find some simplest way, consider using [`blocking::get`](blocking::get) instead.
+/// [get]: crate::get
 ///
 #[doc = include_str!("../docs/return.md")]
 ///
 /// # Examples
 ///
 /// ```rust,no_run
-/// # tokio::runtime::Runtime::new().unwrap().block_on(async {
-/// // declare the client we use
-/// let client = reqwest::Client::new();
-///
-/// // and repeat the request 5 times.
-/// for category in <
-///     nekoslife::Category as strum::IntoEnumIterator
-/// >::iter()
-///     .take(5)
-/// {
-///     // get the url with blocking context. (no 'await')
-///     // note that we pass the reference of the client
-///     // as the first argument at here.
-///     let url = nekoslife::get_with_client(
-///         &client,
-///         category,
-///     ).await?;
-///     // then print the each result.
-///     println!("{url}");
-/// }
-/// # Ok::<(), nekoslife::Error>(())
-/// # });
+#[doc = include_str!("../examples/get_with_client.rs")]
 /// ```
-///
-/// [get_with_client]: crate::get_with_client
 pub async fn get_with_client<T>(
     client: &reqwest::Client,
     endpoint: T,
@@ -78,22 +77,13 @@ where
 ///
 /// # Note
 ///
-/// ## Context
+#[doc = include_str!("../docs/context.md")]
 ///
-/// this function returns [Future](std::future::Future) which must be awaited.
-/// so you have to run this in an async context.\
+/// [blocking_version]: crate::blocking_get
 ///
-/// if you don't care about performance or only need blocking API,
-/// check the [`blocking::get`](self::blocking::get) function out,
-/// which is blocking version of this.
+#[doc = include_str!("../docs/reusability.md")]
 ///
-/// ## Reusability
-///
-/// also this function will make new [client](reqwest::Client)
-/// struct with default settings every time it is called.
-///
-/// if you have to reuse the client or set your client carefully,
-/// consider using the [`get_with_client`] function instead.
+/// [get_with_client]: crate::get_with_client
 ///
 #[doc = include_str!("../docs/return.md")]
 ///
@@ -122,8 +112,6 @@ where
 /// ```rust
 #[doc = include_str!("../examples/get_owoify.rs")]
 /// ```
-///
-/// [get_with_client]: crate::get_with_client
 pub async fn get<T>(endpoint: T) -> Response<T>
 where
     T: IntoUrl,

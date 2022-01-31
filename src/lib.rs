@@ -5,7 +5,7 @@
 
 #[macro_use]
 mod r#macro;
-mod implementation;
+pub mod implementation;
 pub mod r#static;
 pub mod types;
 
