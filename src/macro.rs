@@ -109,7 +109,7 @@ macro_rules! make_text_endpoints {
                 $ endpoint
                 Response
             >] {
-                $ field: $ crate::UrlString,
+                $ field: String,
             }
         }
     };

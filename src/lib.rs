@@ -20,7 +20,8 @@ pub use {
             eight_ball::{
                 self, EightBallMessage, EightBallResponse,
             },
-            Cat, EightBall, Fact, OwOify, Spoiler, Why,
+            Cat, EightBall, Fact, Name, OwOify, Spoiler,
+            Why,
         },
         types::IntoUrl,
     },
