@@ -17,18 +17,29 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/AkiaCode/Nekos.life-rs"
 rust-version = "1.58"
-description = "nekos.life wrapper library"
+description = "Nekos.life wrapper for Rust"
 
 [features]
 default = ["default-tls"]
-blocking = ["tokio"]
+
+blocking = ["tokio/rt"]
+
 default-tls = ["reqwest/default-tls"]
 native-tls = ["reqwest/native-tls"]
 rustls-tls = ["reqwest/rustls-tls"]
 
+all = ["default-tls", "blocking"]
+
 [profile.release-cg]
 inherits = "release"
 codegen-units = 1
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [
+    "--cfg",
+    "docsrs",
+]
 
 [dependencies]
 lazy_static = "1.4.0"

@@ -89,6 +89,8 @@
 //! this crate is licensed under MIT license.
 
 #![deny(missing_docs)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 #[macro_use]
 mod r#macro;
 pub mod implementation;

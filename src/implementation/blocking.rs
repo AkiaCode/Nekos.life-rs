@@ -1,3 +1,12 @@
+//! blocking version of [`implementation`](crate::implementation).
+//!
+//! for more information, please read
+//! [`implementation`](crate::implementation) documentation,\
+//! or read each item-level documentation of this module.
+
+#![cfg(feature = "blocking")]
+#![cfg_attr(docsrs, doc(cfg(feature = "blocking")))]
+
 use {
     super::{
         get_with_client as async_get_with_client,

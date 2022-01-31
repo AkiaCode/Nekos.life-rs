@@ -119,13 +119,10 @@ where
     get_with_client(&Client::new(), endpoint).await
 }
 
+pub mod blocking;
 pub mod category;
 pub mod text;
 pub mod types;
 
 #[cfg(test)]
 mod tests;
-
-/// blocking version of implementation
-#[cfg(feature = "blocking")]
-pub mod blocking;
