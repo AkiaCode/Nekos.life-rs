@@ -1,390 +1,163 @@
-/// Any error that can occur while accessing the api.
-#[derive(thiserror::Error, Debug)]
-pub enum NekosLifeError {
-    #[error("reqwest error")]
-    ReqwestError(#[from] reqwest::Error),
-}
+//! Nekos.life wrapper for Rust.
+//!
+//! # About
+//!
+//! this is nekos.life implementation for the rust programming language,\
+//! you can find out more information about nekos.life at
+//! [their website][nekos.life] and [github][github].
+//!
+//! this crate provides a way to interact with thier API,
+//! to convert the result into useful and readable types.
+//!
+//! and provides both of async and blocking api as well.
+//!
+//! [nekos.life]: https://nekos.life/
+//! [github]: https://github.com/Nekos-life/
+//!
+//! # Quick Start
+//!
+//! first of all, you need to add below to your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! nekoslife = "0.2.1"
+//! ```
+//!
+//! the easiest way to use this crate is
+//! seding single request to `img` endpoint,
+//!
+//! ```rust
+//! // we need async context to use 'get' method.
+//! #[tokio::main]
+//! async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//!     // 'get' method will return 'Future'.
+//!     // so you have to use '.await' to get the result.
+//!     // in this case, the return type
+//!     // of the method is 'Result<String, Error>',
+//!     // so we can use '?' operator here.
+//!     let url: String =
+//!         nekoslife::get(nekoslife::Category::Waifu).await?;
+//!
+//!     // print out the recieved url
+//!     println!("{url}");
+//!
+//!     Ok(())
+//! }
+//! ```
+//!
+//! the [`get`](crate::get) function is one of the most important functions,\
+//! it takes any type that implements [`IntoUrl`](crate::IntoUrl) trait,
+//! and this case, the [`Category`](crate::Category) enum is that type.
+//!
+//! then it will return a [`Future`](std::future::Future) of
+//! [`Result<UrlString, Error>`](crate::UrlString).
+//!
+//! you can also pass string instead of [`Category`](crate::Category).
+//!
+//! ```rust
+//! # #[tokio::main]
+//! # async fn main() -> nekoslife::UnitResult {
+//! let result = nekoslife::get("neko").await?;
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! more information about strings and full list of available category variants,
+//! check out [`Category`](crate::Category) document.
+//!
+//! # Blocking
+//!
+//! you can use `blocking` version of [`get`](crate::get) function,
+//!
+//! first, you need to enable the `blocking` feature from this crate.
+//!
+//! ```toml
+//! [dependencies.nekoslife]
+//! features = ["blocking"]
+//! ```
+//!
+//! then, replace the [`get`](crate::get) function
+//! with [`blocking::get`](crate::blocking::get).
+//!
+//! ```rust
+//! // get the image url from 'Neko' category
+//! let url = nekoslife::blocking::get(
+//!     nekoslife::Category::Neko
+//! )?;
+//! // in this case, the return type will be 'String'
+//!
+//! // then do something with the url.
+//! println!("{url}");
+//! # Ok::<(), nekoslife::Error>(())
+//! ```
+//!
+//! for more information, check out the [`implementation`](crate::implementation) and
+//! the [`blocking`](crate::blocking) module.
+//!
+//! # Other Endpoints
+//!
+//! you can use more endpoints (not just img endpoint),
+//!
+//! for example, below uses [`OwOify`](crate::OwOify) endpoint.
+//!
+//! ```rust
+//! # use nekoslife::UnitResult;
+//! # #[tokio::main]
+//! # async fn main() -> UnitResult {
+//! // get owoified version of "hello, world"
+//! let owo =
+//!     nekoslife::get(nekoslife::OwOify("hello, world"))
+//!         .await?;
+//!
+//! // this will be converted version of our text.
+//! assert_eq!(owo, "hewwo, wowwd");
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! for more information about text based endpoints,
+//! check out [`text`](crate::text) module.
+//!
+//! # License
+//!
+//! this crate is licensed under [MIT](https://opensource.org/licenses/MIT) license.
 
-/// The base api url.
-const BASEURL: &str = "https://nekos.life/api/v2";
+#![deny(missing_docs)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![forbid(unsafe_code)]
 
-#[cfg(feature = "nsfw")]
-mod nsfw;
-#[cfg(feature = "sfw")]
-mod sfw;
+#[macro_use]
+mod r#macro;
+pub mod implementation;
+pub mod r#static;
+pub mod types;
 
-#[cfg(feature = "nsfw")]
-pub use nsfw::NsfwCategory;
-#[cfg(feature = "sfw")]
-pub use sfw::SfwCategory;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum Category {
-    /// A nsfw category.
-    #[cfg(feature = "nsfw")]
-    Nsfw(NsfwCategory),
-    /// A sfw category.
-    #[cfg(feature = "sfw")]
-    Sfw(SfwCategory),
-}
-
-impl Category {
-    /// Gets the path to append after [`BASEURL`]+/img/ to make a request to get an image / gif url.
-    /// # Examples
-    /// ```rust
-    /// # use nekoslife::{Category, SfwCategory};
-    /// assert_eq!(Category::from(SfwCategory::Waifu).to_url_path(), "waifu");
-    /// ```
-    pub const fn to_url_path(self) -> &'static str {
-        match self {
-            #[cfg(feature = "nsfw")]
-            Self::Nsfw(c) => c.to_url_path(),
-            #[cfg(feature = "sfw")]
-            Self::Sfw(c) => c.to_url_path(),
-        }
-    }
-}
-
-#[cfg(feature = "nsfw")]
-impl From<NsfwCategory> for Category {
-    fn from(c: NsfwCategory) -> Self {
-        Self::Nsfw(c)
-    }
-}
-
-#[cfg(feature = "sfw")]
-impl From<SfwCategory> for Category {
-    fn from(c: SfwCategory) -> Self {
-        Self::Sfw(c)
-    }
-}
+#[doc(inline)]
+pub use {
+    implementation::{
+        category::{self, Category},
+        get, get_with_client,
+        text::{
+            self,
+            eight_ball::{
+                self, EightBallMessage, EightBallResponse,
+            },
+            Cat, EightBall, Fact, Name, OwOify, Spoiler,
+            Why,
+        },
+        types::IntoUrl,
+    },
+    r#static::BASEURL,
+    strum::IntoEnumIterator as CategoryIter,
+    types::{
+        error::{self, Error},
+        Response, Result, UnitResult, UrlString,
+    },
+};
 
 #[cfg(feature = "blocking")]
-mod implementation {
-    use super::*;
-
-    /// Gets the url of an image / gif from the api, from the given category,
-    /// and using the given client.
-    /// # Examples
-    /// ```rust,no_run
-    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
-    ///     let client = reqwest::blocking::Client::new();
-    ///     let url: String = nekoslife::get_with_client(&client, nekoslife::SfwCategory::Waifu)?;
-    /// #   Ok(())
-    /// # }
-    pub fn get_with_client(
-        client: &reqwest::blocking::Client,
-        category: impl Into<Category>,
-    ) -> Result<String, NekosLifeError> {
-        let category = category.into();
-
-        #[derive(serde::Deserialize)]
-        struct Response {
-            url: String,
-        }
-
-        let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
-            .send()?
-            .json::<Response>()?;
-
-        Ok(resp.url)
-    }
-
-    /// Gets the url of an image / gif from the api, from the given category,
-    /// and using the default client.
-    /// # Examples
-    /// ```rust,no_run
-    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
-    ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu)?;
-    /// #   Ok(())
-    /// # }
-    pub fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
-        let client = reqwest::blocking::Client::new();
-
-        get_with_client(&client, category)
-    }
-}
-
-#[cfg(not(feature = "blocking"))]
-mod implementation {
-    use super::*;
-
-    /// Gets the url of an image / gif from the api, from the given category,
-    /// and using the given client.
-    /// # Examples
-    /// ```rust,no_run
-    /// # #[tokio::main]
-    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    ///     let client = reqwest::Client::new();
-    ///     let url: String = nekoslife::get_with_client(&client, nekoslife::SfwCategory::Waifu).await?;
-    /// #   Ok(())
-    /// # }
-    pub async fn get_with_client(
-        client: &reqwest::Client,
-        category: impl Into<Category>,
-    ) -> Result<String, NekosLifeError> {
-        let category = category.into();
-
-        #[derive(serde::Deserialize)]
-        struct Response {
-            url: String,
-        }
-
-        let resp = client
-            .get(format!("{}/img/{}", BASEURL, category.to_url_path()))
-            .send()
-            .await?
-            .json::<Response>()
-            .await?;
-
-        Ok(resp.url)
-    }
-
-    /// Gets the url of an image / gif from the api, from the given
-    /// category, and using the default client.
-    /// # Examples
-    /// ```rust,no_run
-    /// # #[tokio::main]
-    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    ///     let url: String = nekoslife::get(nekoslife::SfwCategory::Waifu).await?;
-    /// #   Ok(())
-    /// # }
-    pub async fn get(category: impl Into<Category>) -> Result<String, NekosLifeError> {
-        let client = reqwest::Client::new();
-
-        get_with_client(&client, category).await
-    }
-}
-
-pub use implementation::{get, get_with_client};
-
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    async fn try_endpoint(
-        client: &reqwest::Client,
-        category: impl Into<Category>,
-    ) -> Result<(), (NekosLifeError, Category)> {
-        let category = category.into();
-        match get_with_client(client, category).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err((e, category)),
-        }
-    }
-
-    macro_rules! try_endpoints {
-        ($client:expr, $try_endpoint_fn:ident, $sfw_nsfw:ident, [$($(#[$at:meta])* $category:ident),* $(,)?]) => {
-            $(try_endpoints!($client, $try_endpoint_fn, $sfw_nsfw, $(#[$at])* $category);)*
-        };
-
-        ($client:expr, $try_endpoint_fn:ident, $sfw_nsfw:ident, $(#[$at:meta])* $category:ident) => {
-            $try_endpoint_fn($client, $(#[$at])* {$sfw_nsfw::$category}).await.unwrap(); // test will fail if any of them error
-        }
-    }
-
-    #[tokio::test]
-    async fn all_sfw_endpoints_work() {
-        let client = reqwest::Client::new();
-        try_endpoints!(
-            &client,
-            try_endpoint,
-            SfwCategory,
-            [
-                Tickle, Slap, Poke, Pat, Neko, Meow, Lizard, Kiss, Hug, FoxGirl, Feed, Cuddle,
-                NekoGif, Kemonomimi, Holo, Smug, Baka, Woof, Wallpaper, Goose, Gecg, Avatar, Waifu,
-                EightBall,
-            ]
-        );
-    }
-
-    #[tokio::test]
-    async fn all_nsfw_endpoints_work() {
-        let client = reqwest::Client::new();
-        try_endpoints!(
-            &client,
-            try_endpoint,
-            NsfwCategory,
-            [
-                RandomHentaiGif,
-                Pussy,
-                NekoGif,
-                Neko,
-                Lesbian,
-                Kuni,
-                Cumsluts,
-                Classic,
-                Boobs,
-                Bj,
-                Anal,
-                Avatar,
-                Yuri,
-                Trap,
-                Tits,
-                GirlSoloGif,
-                GirlSolo,
-                PussyWankGif,
-                PussyArt,
-                Kemonomimi,
-                Kitsune,
-                Keta,
-                Holo,
-                HoloEro,
-                Hentai,
-                Futanari,
-                Femdom,
-                FeetGif,
-                EroFeet,
-                Feet,
-                Ero,
-                EroKitsune,
-                EroKemonomimi,
-                EroNeko,
-                EroYuri,
-                CumArts,
-                BlowJob,
-                Spank,
-                Gasm,
-                #[allow(deprecated)]
-                SmallBoobs,
-            ]
-        );
-    }
-
-    #[tokio::test]
-    async fn no_new_endpoints() {
-        let client = reqwest::Client::new();
-
-        macro_rules! known_image_endpoints {
-            ([$($sfw_nsfw:ident : [$($(#[$at:meta])* $category:ident),* $(,)?]),* $(,)?]) => {
-                [
-                    $(
-                        $($(#[$at])* {known_image_endpoints!($sfw_nsfw, $category)},)*
-                    )*
-
-                    // ignore those endpoints
-                    "v3",
-                    "nekoapi_v3.1"
-                ]
-            };
-
-            ($sfw_nsfw:ident, $category:ident $(,)?) => {
-                $sfw_nsfw::$category.to_url_path()
-            };
-        }
-
-        const KNOWN_ENDPOINTS: &[&str] = &known_image_endpoints!(
-            [
-                SfwCategory: [
-                    Tickle,
-                    Slap,
-                    Poke,
-                    Pat,
-                    Neko,
-                    Meow,
-                    Lizard,
-                    Kiss,
-                    Hug,
-                    FoxGirl,
-                    Feed,
-                    Cuddle,
-                    NekoGif,
-                    Kemonomimi,
-                    Holo,
-                    Smug,
-                    Baka,
-                    Woof,
-                    Wallpaper,
-                    Goose,
-                    Gecg,
-                    Avatar,
-                    Waifu,
-                    EightBall,
-                ],
-                NsfwCategory: [
-                    RandomHentaiGif,
-                    Pussy,
-                    NekoGif,
-                    Neko,
-                    Lesbian,
-                    Kuni,
-                    Cumsluts,
-                    Classic,
-                    Boobs,
-                    Bj,
-                    Anal,
-                    Avatar,
-                    Yuri,
-                    Trap,
-                    Tits,
-                    GirlSoloGif,
-                    GirlSolo,
-                    PussyWankGif,
-                    PussyArt,
-                    Kemonomimi,
-                    Kitsune,
-                    Keta,
-                    Holo,
-                    HoloEro,
-                    Hentai,
-                    Futanari,
-                    Femdom,
-                    FeetGif,
-                    EroFeet,
-                    Feet,
-                    Ero,
-                    EroKitsune,
-                    EroKemonomimi,
-                    EroNeko,
-                    EroYuri,
-                    CumArts,
-                    BlowJob,
-                    Spank,
-                    Gasm,
-                    #[allow(deprecated)]
-                    SmallBoobs,
-                ],
-            ]
-        );
-
-        async fn get_endpoints(client: &reqwest::Client) -> Vec<String> {
-            client
-                .get(format!("{}/endpoints", BASEURL))
-                .send()
-                .await
-                .unwrap()
-                .json()
-                .await
-                .unwrap()
-        }
-
-        let endpoints = get_endpoints(&client).await;
-        let image_endpoints = endpoints
-            .iter()
-            .find(|it| it.starts_with("GET,HEAD,OPTIONS     /api/v2/img/"))
-            .unwrap()
-            .as_str();
-        let comma_list = image_endpoints
-            .trim_start_matches("GET,HEAD,OPTIONS     /api/v2/img/<")
-            .trim_end_matches(">");
-        let list = comma_list
-            .split(',')
-            .map(|it| it.trim().trim_start_matches('\'').trim_end_matches('\''))
-            .collect::<Vec<_>>();
-
-        let mut unknown_endpoints = vec![];
-        for item in list.iter() {
-            if !KNOWN_ENDPOINTS.contains(item) {
-                unknown_endpoints.push(format!("{}/img/{}", BASEURL, item));
-            }
-        }
-
-        if !unknown_endpoints.is_empty() {
-            panic!(
-                "Looks like there are new endpoints, please add them: {:?}",
-                unknown_endpoints
-            );
-        }
-    }
-}
+#[doc(inline)]
+pub use implementation::blocking::{
+    self, get as blocking_get,
+    get_with_client as blocking_get_with_client,
+};

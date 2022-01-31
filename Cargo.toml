@@ -2,33 +2,98 @@
 name = "nekoslife"
 version = "0.2.1"
 authors = ["AkiaCode <catry.me@gmail.com>"]
-edition = "2018"
-description = "nekos.life wrapper library"
-license = "MIT"
-repository = "https://github.com/AkiaCode/Nekos.life-rs"
+categories = ["api-bindings"]
 documentation = "https://docs.rs/nekoslife"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2021"
+homepage = "https://github.com/AkiaCode/Nekos.life-rs"
+keywords = [
+    "api",
+    "async",
+    "nekoslife",
+    "implementation",
+    "wrapper",
+]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/AkiaCode/Nekos.life-rs"
+rust-version = "1.58"
+description = "Nekos.life wrapper for Rust"
 
 [features]
-default = ["default-tls", "sfw", "nsfw"]
+default = ["default-tls"]
+
+blocking = ["tokio/rt"]
+
 default-tls = ["reqwest/default-tls"]
 native-tls = ["reqwest/native-tls"]
 rustls-tls = ["reqwest/rustls-tls"]
 
-sfw = []
-nsfw = []
+all = ["default-tls", "blocking"]
 
-blocking = ["reqwest/blocking"]
+[profile.release-cg]
+inherits = "release"
+codegen-units = 1
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [
+    "--cfg",
+    "docsrs",
+]
 
 [dependencies]
-serde = { version="1.0", features=["derive"] }
-reqwest = { version="0.11", default-features=false, features=["json"] }
+lazy_static = "1.4.0"
+paste = "1.0.6"
+serde = { version = "1.0", features = ["derive"] }
+strum = { version = "0.23.0", features = ["derive"] }
 thiserror = "1.0"
+url = "2.2.2"
+
+[dependencies.reqwest]
+version = "0.11"
+default-features = false
+features = ["json"]
+
+[dependencies.tokio]
+version = "1.15.0"
+optional = true
+features = ["rt"]
 
 [dev-dependencies]
-tokio = { version="1", features=["full"] }
+const_format = "0.2.22"
+lazy-regex = "2.2.2"
+pretty_assertions = "1.0.0"
+rand = "0.8.4"
+regex = "1.5.4"
+serde_json = "1.0.78"
+tokio-stream = { version = "0.1.8", features = ["io-util"] }
+
+[dev-dependencies.tokio]
+version = "1.15.0"
+features = [
+    "macros",
+    "rt-multi-thread",
+]
+
+[[example]]
+name = "owoify_chat"
+path = "examples/owoify_chat.rs"
+required-features = [
+    "tokio/io-util",
+    "tokio/io-std",
+]
 
 [[example]]
 name = "waifu_blocking"
 path = "examples/waifu_blocking.rs"
+required-features = ["blocking"]
+
+[[example]]
+name = "blocking_get_with_client"
+path = "examples/blocking_get_with_client.rs"
+required-features = ["blocking"]
+
+[[example]]
+name = "blocking_get"
+path = "examples/blocking_get.rs"
 required-features = ["blocking"]
