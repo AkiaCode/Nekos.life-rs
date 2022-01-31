@@ -90,6 +90,7 @@
 
 #![deny(missing_docs)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
+#![forbid(unsafe_code)]
 
 #[macro_use]
 mod r#macro;
@@ -97,7 +98,6 @@ pub mod implementation;
 pub mod r#static;
 pub mod types;
 
-#[allow(unused_imports)]
 #[doc(inline)]
 pub use {
     implementation::{

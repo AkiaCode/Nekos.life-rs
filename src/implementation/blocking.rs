@@ -46,7 +46,7 @@ where
         .enable_time()
         .enable_io()
         .build()?
-        .block_on(async_get_with_client(&client, endpoint))
+        .block_on(async_get_with_client(client, endpoint))
 }
 
 /// Gets the image url in blocking context.

@@ -103,8 +103,7 @@
 ///
 ///     // do something with the result.
 ///     println!(
-///         "image url from {category} categoty: {}",
-///         res.url(),
+///         "image url from {category} categoty: {res}",
 ///     );
 /// }
 /// # Ok(())
