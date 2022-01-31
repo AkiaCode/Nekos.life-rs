@@ -43,7 +43,7 @@ async fn spoiler_test() -> UnitResult {
     Ok(assert_eq!(
         get(Spoiler("Abiria is cute :)"))
             .await?,
-        "||A||||b||||i||||r||||i||||a|||| ||||i||||s|||| ||||:||||)||"
+        "||A||||b||||i||||r||||i||||a|||| ||||i||||s|||| ||||c||||u||||t||||e|||| ||||:||||)||"
     ))
 }
 
