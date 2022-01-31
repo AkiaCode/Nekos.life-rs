@@ -74,21 +74,24 @@ where
     .await?)
 }
 
-/// Gets the image url
+/// Gets the image url.
 ///
 /// # Note
 ///
 /// ## Context
 ///
 /// this function returns [Future](std::future::Future) which must be awaited.
-/// so you have to run this in an async context.
+/// so you have to run this in an async context.\
+///
 /// if you don't care about performance or only need blocking API,
-/// check the [`blocking::get`](self::blocking::get) function out, which is blocking version of this.
+/// check the [`blocking::get`](self::blocking::get) function out,
+/// which is blocking version of this.
 ///
 /// ## Reusability
 ///
 /// also this function will make new [client](reqwest::Client)
-/// struct with default settings every time it is called.\
+/// struct with default settings every time it is called.
+///
 /// if you have to reuse the client or set your client carefully,
 /// consider using the [`get_with_client`] function instead.
 ///
@@ -96,15 +99,28 @@ where
 ///
 /// # Examples
 ///
-/// ```rust,no_run
-/// # tokio::runtime::Runtime::new().unwrap().block_on(async {
-/// // get the url from 'Waifu' category
-/// let url = nekoslife::get(nekoslife::Category::Waifu).await?;
+/// ```rust
+#[doc = include_str!("../examples/get.rs")]
+/// ```
 ///
-/// // then print the url.
-/// println!("{url}");
-/// # Ok::<(), nekoslife::Error>(())
-/// });
+/// you can also do it by passing a string as an argument.
+///
+/// ```rust
+#[doc = include_str!("../examples/get_with_str.rs")]
+/// ```
+///
+/// for more information, see [`Category`](crate::Category) or
+/// [`IntoUrl`](crate::IntoUrl) documentation.
+///
+/// and you can use other endpoints as well.\
+/// in below example, we use [`Cat`](crate::Cat) as an endpoint.
+///
+/// ```rust
+#[doc = include_str!("../examples/get_cat.rs")]
+/// ```
+///
+/// ```rust
+#[doc = include_str!("../examples/get_owoify.rs")]
 /// ```
 ///
 /// [get_with_client]: crate::get_with_client
