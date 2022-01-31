@@ -12,18 +12,12 @@ make_text_endpoints! {
     /// you can pass this struct directly to [`get`](crate::get) function
     /// to get the cute cat ascii arts.
     ///
-    /// the response type of this endpoint is [String].
+    #[doc = include_str!("../../docs/response_is_string.md")]
     ///
     /// # Examples
     ///
     /// ```rust
-    /// # #[tokio::main]
-    /// # async fn main() -> nekoslife::UnitResult {
-    /// let cat = nekoslife::get(nekoslife::Cat).await?;
-    ///
-    /// println!("{}", cat); // such like "(｡･ω･｡)"
-    /// # Ok(())
-    /// # }
+    #[doc = include_str!("../../examples/get_cat.rs")]
     /// ```
     Cat =>
 
@@ -33,21 +27,14 @@ make_text_endpoints! {
     /// with the text you want to convert
     /// to get the owoified version of the text.
     ///
-    /// the response type of this endpoint is [String].
+    #[doc = include_str!("../../docs/fields.md")]
     ///
-    /// this struct has one field,
-    /// where you have to input the text you want to convert.
+    #[doc = include_str!("../../docs/response_is_string.md")]
     ///
     /// # Examples
     ///
     /// ```rust
-    /// # #[tokio::main]
-    /// # async fn main() -> nekoslife::UnitResult {
-    /// let owo = nekoslife::get(nekoslife::OwOify("hello, world")).await?;
-    ///
-    /// assert_eq!("hewwo, wowwd", owo);
-    /// # Ok(())
-    /// # }
+    #[doc = include_str!("../../examples/get_owoify.rs")]
     /// ```
     OwOify @ 'a |> str := owo <| ~~> owoify !# 1..=200 =>
 
@@ -56,18 +43,12 @@ make_text_endpoints! {
     /// you can pass this struct directly to [`get`](crate::get) function
     /// to get some intersting questions.
     ///
-    /// the response type of this endpoint is [String].
+    #[doc = include_str!("../../docs/response_is_string.md")]
     ///
     /// # Examples
     ///
     /// ```rust
-    /// # #[tokio::main]
-    /// # async fn main() -> nekoslife::UnitResult {
-    /// let why = nekoslife::get(nekoslife::Why).await?;
-    ///
-    /// println!("{}", why); // such like "why are there seashells on mt everest?"
-    /// # Ok(())
-    /// # }
+    #[doc = include_str!("../../examples/get_why.rs")]
     /// ```
     Why =>
 
@@ -76,18 +57,12 @@ make_text_endpoints! {
     /// you can pass this struct directly to [`get`](crate::get) function
     /// to get the fact about intersting things.
     ///
-    /// the response type of this endpoint is [String].
+    #[doc = include_str!("../../docs/response_is_string.md")]
     ///
     /// # Examples
     ///
     /// ```rust
-    /// # #[tokio::main]
-    /// # async fn main() -> nekoslife::UnitResult {
-    /// let fact = nekoslife::get(nekoslife::Fact).await?;
-    ///
-    /// println!("{}", fact); // such like "There are over 500 different types of bananas"
-    /// # Ok(())
-    /// # }
+    #[doc = include_str!("../../examples/get_fact.rs")]
     /// ```
     Fact =>
 
@@ -96,41 +71,28 @@ make_text_endpoints! {
     /// you can pass this struct directly to [`get`](crate::get) function
     /// to get the discord-style spoiler text.
     ///
-    /// the response type of this endpoint is [String].
+    #[doc = include_str!("../../docs/response_is_string.md")]
     ///
     /// # Examples
     ///
     /// ```rust
-    /// # #[tokio::main]
-    /// # async fn main() -> nekoslife::UnitResult {
-    /// let spoiler = nekoslife::get(nekoslife::Spoiler("Akiacode")).await?;
-    ///
-    /// assert_eq!(spoiler, "||A||||k||||i||||a||||c||||o||||d||||e||");
-    /// # Ok(())
-    /// # }
+    #[doc = include_str!("../../examples/get_spoiler.rs")]
     /// ```
     Spoiler @ 'b |> str := owo <| !# 1..=1000 =>
 
-    /// Represents the `cat` endpoint.
+    /// Represents the `name` endpoint.
     ///
     /// you can pass this struct directly to [`get`](crate::get) function
-    /// to get the cute cat ascii arts.
+    /// to get the funny names.
     ///
-    /// the response type of this endpoint is [String].
+    #[doc = include_str!("../../docs/fields.md")]
     ///
-    /// this struct has one field,
-    /// where you have to input the text you want to convert.
+    #[doc = include_str!("../../docs/response_is_string.md")]
     ///
     /// # Examples
     ///
     /// ```rust
-    /// # #[tokio::main]
-    /// # async fn main() -> nekoslife::UnitResult {
-    /// let name = nekoslife::get(nekoslife::Name).await?;
-    ///
-    /// println!("{}", name); // such like "Fence Monster"
-    /// # Ok(())
-    /// # }
+    #[doc = include_str!("../../examples/get_name.rs")]
     /// ```
     Name
 }

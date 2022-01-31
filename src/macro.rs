@@ -45,9 +45,9 @@ macro_rules! parse_json {
 ///     type Response = ();
 ///
 ///     // this will be Pin<Box<Future>>
-///     type Fut = nekoslife::into_url_fut();
+///     type Fut = nekoslife::into_url_fut!();
 ///
-///     fn into_url(self) -> Self::Fut {
+///     fn into_url(self) -> nekoslife::Result<url::Url> {
 ///         unimplemented!()
 ///     }
 ///

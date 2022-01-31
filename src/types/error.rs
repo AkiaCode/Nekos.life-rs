@@ -65,7 +65,7 @@ pub enum Error {
     /// * when malformed [`BASEURL`](struct@crate::BASEURL) was given.
     /// * when invlid path was given.
     ///
-    /// Examples
+    /// # Examples
     ///
     /// ```rust
     /// # #[tokio::main]
@@ -125,7 +125,7 @@ pub enum Error {
     ///
     /// this error contains [`strum::ParseError`] at `error` field.
     ///
-    /// Examples
+    /// # Examples
     ///
     /// ```rust
     /// # use nekoslife::{Spoiler, Error};
