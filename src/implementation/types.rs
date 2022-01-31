@@ -115,7 +115,7 @@
 /// # async fn main() -> nekoslife::UnitResult {
 /// assert_ne!(
 ///     // "neko" will be converted into Category::Neko.
-///     get("neko")
+///     nekoslife::get("neko")
 ///         .await?
 ///         .len(),
 ///     0usize,
@@ -131,7 +131,7 @@
 /// # async fn main() -> nekoslife::UnitResult {
 /// assert_ne!(
 ///     // manually specify the category.
-///     get(nekoslife::Category::Neko)
+///     nekoslife::get(nekoslife::Category::Neko)
 ///         .await?
 ///         .len(),
 ///     0usize,
@@ -161,10 +161,12 @@ pub trait IntoUrl {
     /// # Examples
     ///
     /// ```rust
+    /// use nekoslife::IntoUrl;
+    ///
     /// // define the custom endpoint type
     /// struct OwOify(String);
     ///
-    /// impl nekoslife::IntoUrl for OwOify {
+    /// impl IntoUrl for OwOify {
     ///     type Response = String;
     ///
     ///     type Fut = nekoslife::into_url_fut!();
@@ -205,7 +207,7 @@ pub trait IntoUrl {
     ///         .as_str(),
     ///     "https://nekos.life/api/v2/owoify?text=hello",
     /// );
-    /// # Ok::<(), url::ParseError>(())
+    /// # Ok::<(), nekoslife::Error>(())
     /// ```
     fn into_url(self) -> crate::Result<url::Url>;
 

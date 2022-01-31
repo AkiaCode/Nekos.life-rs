@@ -99,11 +99,13 @@ macro_rules! make_text_endpoints {
         ->> $ field :ident
     ) => {
         paste::paste! {
-            #[
-                allow(missing_docs)
-            ] #[derive(
+            #[allow(
+                missing_docs
+            )] #[derive(
                 serde::Deserialize
-            )] pub struct [<
+            )] pub(
+                crate
+            ) struct [<
                 $ endpoint
                 Response
             >] {
@@ -281,5 +283,82 @@ macro_rules! make_text_endpoints {
                 }
             }
         ) +
+    };
+}
+
+macro_rules! pair {
+    (
+        $ (
+            #[
+                $ item_attr :meta
+            ]
+        ) *
+        $ vis :vis
+        enum
+        $ name :ident
+        {
+            $ (
+                $ (
+                    #[
+                        $ attr :meta
+                    ]
+                ) *
+                $ field :ident
+                <
+                    $ raw :literal
+                >
+            ) , *
+            $ ( , ) ?
+        }
+    ) => {
+        $ (
+            #[
+                $ item_attr
+            ]
+        ) *
+        $ vis
+        enum $ name {
+            $ (
+                #[
+                    serde(
+                        rename = $ raw
+                    )
+                ] #[allow(
+                    missing_docs
+                )] $ (
+                    #[
+                        $ attr
+                    ]
+                ) * $ field
+            ) , *
+        }
+
+        impl std::fmt::Display for $ name {
+            fn fmt(
+                &self,
+                f: &mut std::fmt::Formatter<'_>,
+            ) -> std::fmt::Result {
+                match self {
+                    $ (
+                        $ name::$ field => write!(
+                            f,
+                            $ raw
+                        ),
+                    ) *
+                }
+            }
+        }
+
+        impl From<
+            $ name
+        > for &'static str {
+            fn from(en: $ name) -> &'static str {
+                match en {
+                    $ (
+                        $ name::$ field => $ raw,
+                    ) *
+                }
+            }
+        }
     };
 }

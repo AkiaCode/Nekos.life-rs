@@ -16,6 +16,7 @@ make_text_endpoints! {
 }
 
 pub mod eight_ball;
+pub use eight_ball::EightBall;
 
 #[cfg(test)]
 mod tests;

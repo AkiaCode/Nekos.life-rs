@@ -15,7 +15,13 @@ pub use {
     implementation::{
         category::{self, Category},
         get, get_with_client,
-        text::{self, Cat, Fact, OwOify, Spoiler, Why},
+        text::{
+            self,
+            eight_ball::{
+                self, EightBallMessage, EightBallResponse,
+            },
+            Cat, EightBall, Fact, OwOify, Spoiler, Why,
+        },
         types::IntoUrl,
     },
     r#static::BASEURL,

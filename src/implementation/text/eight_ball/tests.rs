@@ -111,3 +111,21 @@ async fn get_8ball_test() -> UnitResult {
 
     Ok(assert_ne!(eight_ball_res.url.len(), 0))
 }
+
+#[test]
+fn to_string() {
+    assert_eq!(
+        EightBallMessage::WaitForIt.to_string(),
+        "Wait For It"
+    )
+}
+
+#[test]
+fn into_static_str() {
+    assert_eq!(
+        Into::<&'static str>::into(
+            EightBallMessage::WaitForIt
+        ),
+        "Wait For It"
+    )
+}
