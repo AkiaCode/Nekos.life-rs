@@ -34,6 +34,7 @@ pub use {
 };
 
 #[cfg(feature = "blocking")]
+#[doc(inline)]
 pub use implementation::blocking::{
     self, get as blocking_get,
     get_with_client as blocking_get_with_client,

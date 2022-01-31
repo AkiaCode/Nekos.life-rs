@@ -32,6 +32,30 @@ macro_rules! parse_json {
     };
 }
 
+/// Type autocomplete for [`IntoUrl`](crate::IntoUrl) implementation.
+///
+/// This is just utility macro for easy implementing.
+///
+/// # Examples
+///
+/// ```rust
+/// struct MyEndpoint;
+///
+/// impl nekoslife::IntoUrl for MyEndpoint {
+///     type Response = ();
+///
+///     // this will be Pin<Box<Future>>
+///     type Fut = nekoslife::into_url_fut();
+///
+///     fn into_url(self) -> Self::Fut {
+///         unimplemented!()
+///     }
+///
+///     fn parse(res: reqwest::Response) -> Self::Fut {
+///         unimplemented!()
+///     }
+/// }
+/// ```
 #[macro_export]
 #[allow(missing_docs)]
 macro_rules! into_url_fut {

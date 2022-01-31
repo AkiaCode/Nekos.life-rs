@@ -42,6 +42,7 @@ use {crate::IntoUrl, serde::Deserialize};
 /// # Ok(())
 /// # }
 /// ```
+#[derive(Debug)]
 pub struct EightBall;
 
 pair! {
