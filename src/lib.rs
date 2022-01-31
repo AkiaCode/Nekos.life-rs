@@ -27,7 +27,22 @@
 //! seding single request to `img` endpoint,
 //!
 //! ```rust
-#![doc = include_str!("../examples/waifu.rs")]
+//! // we need async context to use 'get' method.
+//! #[tokio::main]
+//! async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//!     // 'get' method will return 'Future'.
+//!     // so you have to use '.await' to get the result.
+//!     // in this case, the return type
+//!     // of the method is 'Result<String, Error>',
+//!     // so we can use '?' operator here.
+//!     let url: String =
+//!         nekoslife::get(nekoslife::Category::Waifu).await?;
+//!
+//!     // print out the recieved url
+//!     println!("{url}");
+//!
+//!     Ok(())
+//! }
 //! ```
 //!
 //! the [`get`](crate::get) function is one of the most important functions,\
@@ -65,7 +80,15 @@
 //! with [`blocking::get`](crate::blocking::get).
 //!
 //! ```rust
-#![doc = include_str!("../examples/blocking_get.rs")]
+//! // get the image url from 'Neko' category
+//! let url = nekoslife::blocking::get(
+//!     nekoslife::Category::Neko
+//! )?;
+//! // in this case, the return type will be 'String'
+//!
+//! // then do something with the url.
+//! println!("{url}");
+//! # Ok::<(), nekoslife::Error>(())
 //! ```
 //!
 //! for more information, check out the [`implementation`](crate::implementation) and
@@ -78,7 +101,18 @@
 //! for example, below uses [`OwOify`](crate::OwOify) endpoint.
 //!
 //! ```rust
-#![doc = include_str!("../examples/get_owoify.rs")]
+//! # use nekoslife::UnitResult;
+//! # #[tokio::main]
+//! # async fn main() -> UnitResult {
+//! // get owoified version of "hello, world"
+//! let owo =
+//!     nekoslife::get(nekoslife::OwOify("hello, world"))
+//!         .await?;
+//!
+//! // this will be converted version of our text.
+//! assert_eq!(owo, "hewwo, wowwd");
+//! # Ok(())
+//! # }
 //! ```
 //!
 //! for more information about text based endpoints,
@@ -86,7 +120,7 @@
 //!
 //! # License
 //!
-//! this crate is licensed under MIT license.
+//! this crate is licensed under [MIT](https://opensource.org/licenses/MIT) license.
 
 #![deny(missing_docs)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
