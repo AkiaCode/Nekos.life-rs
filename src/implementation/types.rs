@@ -8,6 +8,8 @@
 ///
 /// # Usage
 ///
+/// ## Manually Implementing
+///
 /// this trait has two important methods:
 ///
 /// * `into_url`: this method convert the type into a [`url::Url`], or [`Error`](crate::Error).
@@ -94,6 +96,54 @@
 /// # Ok(())
 /// # }
 /// ```
+///
+/// ## Flexibility
+///
+/// note that you can pass any type
+/// which implements `IntoUrl` to
+/// [`get`](crate::get),
+/// [`get_with_client`](crate::get_with_client),
+/// [`blocking::get`](crate::blocking::get) and
+/// [`blocking::get_with_client`](crate::blocking::get_with_client) functions,
+/// as mentioned above.
+///
+/// for example, [`&str`] type implements `IntoUrl`.\
+/// so you can pass some string directly instead of [`Category`](crate::Category) type.
+///
+/// ```rust
+/// # #[tokio::main]
+/// # async fn main() -> nekoslife::UnitResult {
+/// assert_ne!(
+///     // "neko" will be converted into Category::Neko.
+///     get("neko")
+///         .await?
+///         .len(),
+///     0usize,
+/// );
+/// # Ok(())
+/// # }
+/// ```
+///
+/// this is equals to:
+///
+/// ```
+/// # #[tokio::main]
+/// # async fn main() -> nekoslife::UnitResult {
+/// assert_ne!(
+///     // manually specify the category.
+///     get(nekoslife::Category::Neko)
+///         .await?
+///         .len(),
+///     0usize,
+/// );
+/// # Ok(())
+/// # }
+/// ```
+///
+/// although, passing a string instead of a [`Category`](crate::Category) enum is not encouraged,\
+/// since it can cause [`UnkownEndpoint`](crate::Error) error,
+/// not iterable,
+/// could not garuntee that the endpoint is correct, etc.
 pub trait IntoUrl {
     /// Response type that will be returned by the `get` like methods.
     type Response;
@@ -105,7 +155,10 @@ pub trait IntoUrl {
 
     /// consumes itself and returns a [`Result`](crate::Result) of [`url::Url`].
     ///
-    /// Examples
+    /// you can extend the BASEURL or make your own.\
+    /// see the [`BASEURL`](struct.BASEURL.html) documentation for more information.
+    ///
+    /// # Examples
     ///
     /// ```rust
     /// // define the custom endpoint type
@@ -139,6 +192,20 @@ pub trait IntoUrl {
     ///         unimplemented!()
     ///     }
     /// }
+    ///
+    /// assert_eq!(
+    ///     OwOify(
+    ///         "hello".to_string()
+    ///     )
+    ///         // convert struct into url.
+    ///         .into_url()?
+    ///         // note that this returns Ok(url::Url).
+    ///         // we need to unwrap with ? operator and call .as_str() method
+    ///         // to get the string slice of the result url.
+    ///         .as_str(),
+    ///     "https://nekos.life/api/v2/owoify?text=hello",
+    /// );
+    /// # Ok::<(), url::ParseError>(())
     /// ```
     fn into_url(self) -> crate::Result<url::Url>;
 
